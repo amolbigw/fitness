@@ -57,510 +57,114 @@ const PROFILE_ORDER = ["AW","SV"];
 
 // ─── Full program data ────────────────────────────────────────────────────────
 const PROGRAM = [
-  {
-    id: 1,
-    label: "Cycle 1",
-    name: "Strength — 5-Rep Progressions",
-    dates: "Apr – May 2025",
-    weeks: 6,
-    scheme: "Descending reps into strength zone, then ascending AMAP wave",
-    days: {
-      monday: {
-        focus: "Lower — Squat",
-        activation: [
-          "Tempo Goblet Stepdown — 3 × 4-6",
-          "Side Plank with Hip Abduction — 3 × 10",
-        ],
-        mainLift: {
-          name: "Squat Variation (Select a Lift)",
-          options: ["Back Squat","Front Squat","Safety Bar Squat","Goblet Squat"],
-          weekly: ["5 × 4-6","5 × 4-6","5 × 3-5","5 × 6-8","5 × 5-7","5 × 5, 6, 7, 8, AMAP"],
-        },
-        accessories: [],
-      },
-      tuesday: {
-        focus: "Upper — Bench Press",
-        activation: [
-          "Push-Up Variation — 3 × 6-12",
-          "DB Upright Row — 3 × 12",
-        ],
-        mainLift: {
-          name: "Bench Press Variation (Select a Lift)",
-          options: ["Flat Barbell Bench","Dumbbell Bench","Close-Grip Bench"],
-          weekly: ["5 × 4-6","5 × 4-6","5 × 3-5","5 × 6-8","5 × 5-7","5 × 4, 5, 6, 7, AMAP"],
-        },
-        accessories: [],
-      },
-      thursday: {
-        focus: "Lower — Deadlift / Hip Hinge",
-        activation: [
-          "GHG Lateral Lunge — 3 × 10",
-          "Deadbug ISO-Holds with FR — 3 × 30-45s",
-        ],
-        mainLift: {
-          name: "Deadlift Variation (Select a Lift)",
-          options: ["Conventional Deadlift","Romanian Deadlift","Trap Bar Deadlift","Sumo Deadlift"],
-          weekly: ["5 × 4-6","5 × 4-6","5 × 3-5","5 × 5-7","5 × 5-7","5 × AMAP"],
-        },
-        accessories: [],
-      },
-      friday: {
-        focus: "Upper — Pull / Accessories",
-        activation: [
-          "Pull-Up/Down Variation — 4 × 6-12",
-          "Cable Crossbody Tricep Ext REST PAUSE — 3 × 16 (8 + 20s rest + 8)",
-        ],
-        mainLift: null,
-        accessories: [
-          "DB Skullcrushers — 3 × 16 REST PAUSE",
-          "Additional accessory work",
-        ],
-      },
-    },
-  },
-  {
-    id: 2,
-    label: "Cycle 2",
-    name: "Strength-Hypertrophy — 5-Rep with Deadlift Focus",
-    dates: "May – Jun 2025",
-    weeks: 6,
-    scheme: "5-rep cluster progressions on squat/bench; deadlift volume builds then drops",
-    days: {
-      monday: {
-        focus: "Lower — Squat",
-        activation: [
-          "Low Forward + Reverse Lunge — 3 × 8-10",
-          "Side Plank Separations — 3 × 10",
-        ],
-        mainLift: {
-          name: "Squat Variation (Select a Lift)",
-          options: ["Back Squat","Front Squat","Safety Bar Squat","Goblet Squat"],
-          weekly: ["5 × 4-6","5 × 4-6","5 × 3-5","5 × 3-5","5 × 4-6","5 × 4-6"],
-        },
-        accessories: [],
-      },
-      tuesday: {
-        focus: "Upper — Bench Press (Explosive)",
-        activation: [
-          "Plate Backburns — 3 × 8-10",
-          "Bent Over MB Chest Pass — 3 × 6-8 (as explosive as possible)",
-        ],
-        mainLift: {
-          name: "Bench Press Variation (Select a Lift)",
-          options: ["Flat Barbell Bench","Dumbbell Bench","Close-Grip Bench"],
-          weekly: ["5 × 4-6","5 × 4-6","5 × 3-5","5 × 6-8","5 × 5-7","5 × 4-5 (peaking)"],
-        },
-        accessories: [],
-      },
-      thursday: {
-        focus: "Lower — Deadlift (volume drops)",
-        activation: [
-          "Goblet Cossack Squats — 3 × 8",
-          "Side Bend Variation — 3 × 10",
-        ],
-        mainLift: {
-          name: "Deadlift Variation (Select a Lift)",
-          options: ["Conventional Deadlift","Romanian Deadlift","Trap Bar Deadlift"],
-          weekly: ["5 × 5","5 × 4","5 × 3","5 × 3","4 × 4","4 × 3"],
-        },
-        accessories: [],
-      },
-      friday: {
-        focus: "Upper — Pull / Lateral",
-        activation: [
-          "Pull-Up/Down Variation — 4 × 6-12",
-          "Side Leaning Lateral Raise — 3 × 8-12",
-        ],
-        mainLift: {
-          name: "Bench-type Variation (Select a Lift)",
-          options: ["Flat Barbell Bench","Dumbbell Bench","Incline DB Bench"],
-          weekly: ["4 × 6-8","4 × 6-8","4 × 6-10","4 × 5-7","4 × 5-7","4 × 8-12"],
-        },
-        accessories: [],
-      },
-    },
-  },
-  {
-    id: 3,
-    label: "Cycle 3",
-    name: "Strength-Endurance — OHP + Deadlift Peak",
-    dates: "Jun – Aug 2025",
-    weeks: 6,
-    scheme: "OHP descends from high rep to low; deadlift waves down then holds",
-    days: {
-      monday: {
-        focus: "Lower — Hamstrings / Unilateral",
-        activation: [
-          "Hamstrings Variation — 3 × 10-15 (Select a Lift)",
-          "Side Plank Hip Abduction ISO — 3 × 30s",
-        ],
-        mainLift: {
-          name: "Squat/Lower Body Variation (Select a Lift)",
-          options: ["Back Squat","Front Squat","Safety Bar Squat","Leg Press"],
-          weekly: ["4 × 8","4 × 8","4 × 6-8","4 × 5-6","4 × 5","4 × 5"],
-        },
-        accessories: [],
-      },
-      tuesday: {
-        focus: "Upper — Chest/Shoulders (Rotational Power)",
-        activation: [
-          "Chest Supported I's Y's T's — 3 × 10",
-          "Tall Kneeling MB Rotational Slam — 3 × 8",
-        ],
-        mainLift: {
-          name: "Bench/Press Variation (Select a Lift)",
-          options: ["Flat Barbell Bench","Dumbbell Bench","Close-Grip Bench"],
-          weekly: ["4 × 8","4 × 6","4 × 5","4 × 5","4 × 5","4 × 5"],
-        },
-        accessories: [],
-      },
-      thursday: {
-        focus: "Lower — Deadlift (Peaking)",
-        activation: [
-          "Copenhagen Hip Lifts — 3 × 10-15",
-          "90/90 Hip IR ISO — 3 × 5-8 (3s hold)",
-        ],
-        mainLift: {
-          name: "Deadlift Variation (Select a Lift)",
-          options: ["Conventional Deadlift","Trap Bar Deadlift","Sumo Deadlift"],
-          weekly: ["4 × 5","4 × 4-5","4 × 4","4 × 3-4","4 × 3","4 × 5"],
-        },
-        accessories: [],
-      },
-      friday: {
-        focus: "Upper — Overhead Press",
-        activation: [
-          "Wall-Supported DB Bicep Curls — 4 × 12-15",
-        ],
-        mainLift: {
-          name: "Overhead Press Variation (Select a Lift)",
-          options: ["Barbell OHP","Dumbbell OHP Seated","Dumbbell OHP Standing","Push Press"],
-          weekly: ["4 × 10","4 × 8-10","4 × 8-10","4 × 6-8","4 × 6-8","4 × 6-8"],
-        },
-        accessories: [],
-      },
-    },
-  },
-  {
-    id: 4,
-    label: "Cycle 4",
-    name: "Strength Peak with Deload",
-    dates: "Aug – Sep 2025",
-    weeks: 7,
-    scheme: "High→low rep drop, ascending set wave, deload week, then 5-4-3-2 peak",
-    days: {
-      monday: {
-        focus: "Lower — Squat",
-        activation: [
-          "Hamstring Curl Variation — 3 × 15-20",
-          "Side Plank Hip Lift w/ Abduction — 3 × 10",
-        ],
-        mainLift: {
-          name: "Squat Variation (Select a Lift)",
-          options: ["Back Squat","Front Squat","Safety Bar Squat"],
-          weekly: ["4 × 10","4 × 8, 8, 8, 10","4 × 6, 6, 6, 8","4 × 5, 5, 5, 8","4 × 4, 6, 8, 10 (ascending)","4 × 5 (DELOAD)","4 × 5, 4, 3, 2 (PEAK)"],
-        },
-        accessories: [],
-      },
-      tuesday: {
-        focus: "Upper — Bench Press",
-        activation: [
-          "Rear Delt Raises — 3 × 15",
-          "1-Arm Plank — 3 × 20-30s",
-        ],
-        mainLift: {
-          name: "Bench Press Variation (Select a Lift)",
-          options: ["Flat Barbell Bench","Dumbbell Bench","Close-Grip Bench"],
-          weekly: ["4 × 10","4 × 8, 8, 8, 10","4 × 6, 6, 6, 8","4 × 5, 5, 5, 8","4 × 4, 6, 8, 10 (ascending)","4 × 5 (DELOAD)","4 × 5, 4, 3, 2 (PEAK)"],
-        },
-        accessories: [],
-      },
-      thursday: {
-        focus: "Lower — Deadlift",
-        activation: [
-          "Copenhagen Hip Lifts — 3 × 10-15",
-          "Goblet Step-Downs — 3 × 10",
-        ],
-        mainLift: {
-          name: "Deadlift Variation (Select a Lift)",
-          options: ["Conventional Deadlift","Trap Bar Deadlift","Sumo Deadlift"],
-          weekly: ["4 × 5","4 × 4, 4, 5, 5","4 × 4","4 × 3, 3, 4, 4","4 × 2, 3, 4, 5 (ascending)","4 × 5 (DELOAD)","4 × 5, 4, 3, 2 (PEAK)"],
-        },
-        accessories: [],
-      },
-      friday: {
-        focus: "Upper — Pull / Triceps",
-        activation: [
-          "Cable Overhead Triceps Extensions — 4 × 10-15",
-          "Pull-Up/Down Variation — 4 × 6-12 (Select a Lift)",
-        ],
-        mainLift: {
-          name: "Press Variation (Select a Lift)",
-          options: ["Flat Barbell Bench","Dumbbell Bench","Incline DB Bench"],
-          weekly: ["4 × 6-8","4 × 6-8","4 × 6-8","4 × 8-10","4 × 8-10","4 × 8-10 (DELOAD)","4 × 8-12"],
-        },
-        accessories: [],
-      },
-    },
-  },
-  {
-    id: 5,
-    label: "Cycle 5",
-    name: "Strength Peaking — Low Rep Clusters",
-    dates: "Sep – Nov 2025",
-    weeks: 7,
-    scheme: "Steady low-rep deadlifts (3-5 range); bench uses 5,5,5,AMAP cluster sets",
-    days: {
-      monday: {
-        focus: "Lower — Squat",
-        activation: [
-          "DB Lateral Squat — 3 × 10",
-          "Bear Plank Pull Through — 3 × 30s",
-        ],
-        mainLift: {
-          name: "Squat Variation (Select a Lift)",
-          options: ["Back Squat","Front Squat","Safety Bar Squat"],
-          weekly: ["4 × 5","4 × 5","4 × 5, 5, 5, 8-10","4 × 5, 5, 5, 8-10","4 × 4, 4, 4, 6-8","4 × 5, 5, 5, AMAP","4 × 5, 5, 5, AMAP"],
-        },
-        accessories: [],
-      },
-      tuesday: {
-        focus: "Upper — Bench Press / Pull",
-        activation: [
-          "Cable Lat Pull-Downs — 3 × 10-12",
-          "DB Reverse Fly — 3 × 10-12",
-        ],
-        mainLift: {
-          name: "Bench Press Variation (Select a Lift)",
-          options: ["Flat Barbell Bench","Dumbbell Bench","Close-Grip Bench"],
-          weekly: ["4 × 5","4 × 5","4 × 5, 5, 5, 8-10","4 × 5, 5, 5, 8-10","4 × 4, 4, 4, 6-8","4 × 5, 5, 5, AMAP","4 × 5, 5, 5, AMAP"],
-        },
-        accessories: [],
-      },
-      thursday: {
-        focus: "Lower — Deadlift",
-        activation: [
-          "DB Step-Downs — 3 × 10",
-          "Medball Groin Squeeze — 3 × 15-30",
-        ],
-        mainLift: {
-          name: "Deadlift Variation (Select a Lift)",
-          options: ["Conventional Deadlift","Trap Bar Deadlift","Sumo Deadlift"],
-          weekly: ["4 × 4","4 × 4","4 × 3","4 × 3","4 × 3","4 × 5, 4, 3, 2","4 × 5, 4, 3, 2"],
-        },
-        accessories: [],
-      },
-      friday: {
-        focus: "Upper — Incline Press / Row",
-        activation: [],
-        mainLift: null,
-        accessories: [
-          "Incline Bench Press Variation — 4 × 6-10 (Select a Lift)",
-          "Banded Y Raises — 3 × 12-15",
-          "1-Arm Paused DB Row — 4 sets",
-          "Additional accessories",
-        ],
-      },
-    },
-  },
-  {
-    id: 6,
-    label: "Cycle 6",
-    name: "Wave Loading — Pyramid Down then Reset",
-    dates: "Nov 2025 – Jan 2026",
-    weeks: 8,
-    scheme: "5 sets/session. Waves: 10,8,6,8,10 → 9,7,5,7,9 → 8,6,4,6,8 → 7,5,3,5,7 → reset to straight 8s",
-    days: {
-      monday: {
-        focus: "Lower — Squat",
-        activation: [
-          "Goblet Lateral Lunge — 3 × 10",
-          "Cable Pallof Press — 3 × 10",
-        ],
-        mainLift: {
-          name: "Squat Variation (Select a Lift)",
-          options: ["Back Squat","Front Squat","Safety Bar Squat"],
-          weekly: ["5 × 10, 8, 6, 8, 10","5 × 10, 8, 6, 8, 10","5 × 9, 7, 5, 7, 9","5 × 9, 7, 5, 7, 9","5 × 8, 8, 8, 8, 8","5 × 8, 8, 8, 8, 8","5 × 8, 8, 8, 8, 8","5 × 8, 8, 8, 8, 8"],
-        },
-        accessories: [],
-      },
-      tuesday: {
-        focus: "Upper — Bench Press (Wave Loading)",
-        activation: [
-          "DB Upright Row — 3 × 12-15",
-          "Banded Pull Aparts — 3 × 15-20",
-        ],
-        mainLift: {
-          name: "Bench Press Variation (Select a Lift)",
-          options: ["Flat Barbell Bench","Dumbbell Bench","Close-Grip Bench"],
-          weekly: ["5 × 10, 8, 6, 8, 10","5 × 10, 8, 6, 8, 10","5 × 9, 7, 5, 7, 9","5 × 9, 7, 5, 7, 9","5 × 8, 6, 4, 6, 8","5 × 7, 5, 3, 5, 7","5 × 8, 8, 8, 8, 8","5 × 8, 8, 8, 8, 8"],
-        },
-        accessories: [],
-      },
-      thursday: {
-        focus: "Lower — Hip Hinge / Core",
-        activation: [
-          "1-Leg Hip Thrust — 3 × 10-15",
-          "Standing Banded Hip Flexion — 3 × 10-15",
-          "RKC Plank — 3 × 30-45s",
-        ],
-        mainLift: {
-          name: "Deadlift/Hip Hinge Variation (Select a Lift)",
-          options: ["Conventional Deadlift","Romanian Deadlift","Trap Bar Deadlift"],
-          weekly: ["Wave loading","Wave loading","Wave down","Wave down","Wave down","Wave min","Straight sets","Straight sets"],
-        },
-        accessories: [],
-      },
-      friday: {
-        focus: "Upper — Incline Bench / Pull",
-        activation: [],
-        mainLift: null,
-        accessories: [
-          "Incline Bench Press Variation — 4 × 6-12 (Select a Lift)",
-          "Pull-Up/Down Variation — 4 × 6-12 (Select a Lift)",
-          "Seated Row Variation",
-        ],
-      },
-    },
-  },
-  {
-    id: 7,
-    label: "Cycle 7",
-    name: "Overhead Press Focus — 4-Set Descending",
-    dates: "Jan – Feb 2026",
-    weeks: 6,
-    scheme: "OHP descends 8-10 → 4-6 rep then waves back up; Tuesday press mirrors this",
-    days: {
-      monday: {
-        focus: "Lower — Split Squat / Jumps",
-        activation: [
-          "Goblet Split Squat Pulses — 3-4 × 10-12",
-          "Hamstrings Variation — 3-4 × 12-15 (Select a Lift)",
-          "Pogo Circuit — AMSAP",
-        ],
-        mainLift: {
-          name: "Squat/Lower Variation (Select a Lift)",
-          options: ["Back Squat","Front Squat","Goblet Squat","Split Squat"],
-          weekly: ["3-4 × 10-12","3-4 × 10-12","3-4 × 10","3-4 × 10","3-4 × 12","3-4 × 12"],
-        },
-        accessories: [],
-      },
-      tuesday: {
-        focus: "Upper — Press (Rotational Power)",
-        activation: [
-          "Rotational MB Throw — 3 × 8",
-          "Prone Backburns — 3 × 8",
-          "1-Arm Cable Pull-Down — 3 × 10",
-        ],
-        mainLift: {
-          name: "Press Variation (Select a Lift)",
-          options: ["Flat Barbell Bench","Dumbbell Bench","Incline DB Bench"],
-          weekly: ["4 × 6-8","4 × 6-8","4 × 4-6","4 × 4-6","4 × 3-5","4 × 8-10 (wave up)"],
-        },
-        accessories: [],
-      },
-      thursday: {
-        focus: "Lower — Squat Pattern / Core",
-        activation: [
-          "Goblet Wall Cossack Squat — 3 × 10",
-          "B-Stance RDL — 3 × 8",
-          "Banded Mountain Climbers — 3 × 6-8",
-        ],
-        mainLift: {
-          name: "Deadlift/Hip Hinge (Select a Lift)",
-          options: ["Conventional Deadlift","Romanian Deadlift","Trap Bar Deadlift"],
-          weekly: ["4 × 6-8","4 × 6-8","4 × 4-6","4 × 4-6","4 × 3-5","4 × 8-10"],
-        },
-        accessories: [],
-      },
-      friday: {
-        focus: "Upper — Overhead Press (Primary Progression)",
-        activation: [
-          "Banded Y Raises — 4 × 15",
-        ],
-        mainLift: {
-          name: "Overhead Press Variation (Select a Lift)",
-          options: ["Barbell OHP","Dumbbell OHP Seated","Dumbbell OHP Standing","Push Press"],
-          weekly: ["4 × 8-10","4 × 8-10","4 × 6-8","4 × 6-8","4 × 4-6","4 × 4-6 (peak)"],
-        },
-        accessories: [
-          "Wide Grip Seated Row — 4 × 8-10",
-          "DB Bicep Curl Variation — 3 sets",
-        ],
-      },
-    },
-  },
-  {
-    id: 8,
-    label: "Cycle 8",
-    name: "Hypertrophy Block — Supersets & Accessories",
-    dates: "Feb – Mar 2026",
-    weeks: 5,
-    scheme: "Main lifts start straight sets then add intra-set drops. Pattern: 8→8→8,8,x,x→6→6,6,4,4",
-    days: {
-      monday: {
-        focus: "Lower — Split Squat / Squat / Hamstrings",
-        activation: [
-          "Split Squat Switches — 3 × 8",
-          "Front Plank with Banded Row — 3 × 10",
-          "Hamstrings Variation — 3 × 10-15 (Select a Lift)",
-        ],
-        mainLift: {
-          name: "Squat Variation (Select a Lift)",
-          options: ["Back Squat","Front Squat","Safety Bar Squat","Goblet Squat"],
-          weekly: ["4 × 10","4 × 10","4 × 8","4 × 6","4 × 6, 6, 4, 4"],
-        },
-        accessories: [
-          "DB Bulgarian Split Squat — 4 × 6-8 (wk 4) / 4 × 8-10 (wk 5)",
-          "Side Bend Variation — 4 × 10-15 (Select a Lift)",
-        ],
-      },
-      tuesday: {
-        focus: "Upper — Rear Delt / Bench Press / Row",
-        activation: [
-          "Rear Delt Raises — 3 × 15",
-          "MB OH Slam to Chest Pass — 3 × 6",
-          "Cable Face Pulls — 3 × 15",
-        ],
-        mainLift: {
-          name: "Bench Press Variation (Select a Lift)",
-          options: ["Flat Barbell Bench","Dumbbell Bench","Close-Grip Bench"],
-          weekly: ["4 × 8","4 × 8","4 × 8, 8 (cluster)","4 × 6","4 × 6, 6, 4, 4"],
-        },
-        accessories: [
-          "Tempo 1-Arm DB Row — 4 × 10 (wk 4) / 4 × 12 (wk 5)",
-          "Push-Up Variation — 4 × 6-12 (Select a Lift)",
-        ],
-      },
-      thursday: {
-        focus: "Lower — Lateral Squat / Deadlift / Core",
-        activation: [
-          "Goblet Lateral Squat ISO — 3 × 30s",
-          "45° Back Extension — 3 × 10-15",
-          "Depth Landing — 3 × 6 (stick and hold 2s)",
-        ],
-        mainLift: {
-          name: "Deadlift Variation (Select a Lift)",
-          options: ["Conventional Deadlift","Trap Bar Deadlift","Romanian Deadlift"],
-          weekly: ["4 × 4","4 × 4","4 × 4","4 × 4","4 × 4, 4, 3, 3"],
-        },
-        accessories: [
-          "1/2 Kneeling Cable Chop — 4 × 10",
-          "1-Leg Extension — 4 × 15",
-        ],
-      },
-      friday: {
-        focus: "Upper — Lat Pull / OHP / Triceps / Curls",
-        activation: [],
-        mainLift: null,
-        accessories: [
-          "Superset A: Cable Lat Pull-Downs 4×8 + Incline DB Lateral Raises 4×12",
-          "Superset B: Seated DB OHP 4×8 + DB Hammer Curls 4×12",
-          "Superset C: DB Skullcrushers 3×10 + Close Grip DB Bench 3×12-15 + Cable Curls Facing Away 3×15",
-        ],
-      },
-    },
-  },
+  {id:"H1",label:"Cycle H1",name:"Jan\u2013Feb 2024 \u2014 Hypertrophy (DB 1.5 Split Squat, Trap Bar RDL, Cable Mechanics)",dates:"2024-01-22 to 2024-03-01",weeks:6,scheme:"Moderate rep ranges (6-10 lower, 8-12 upper). Traditional A/B/C superset structure. Mechanical drop sets and compound supersets for arms.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["DB 1.5 Bulgarian Split Squats (4 x 6-8)", "Heel Elevated DB Hack Squat (4 x 8-10)"],B:{type:"exercises",items:["GHD Razor Curl (4 x 6-10, use PVC for assistance)", "Side Plank with Hip Abduction (4 x 8-12)"]},C:["2-Leg Toes Elevated Calf Raises (3 x 15-20)", "Ab Crunch (3 x 10-15)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Bench Press Variation \u2014 Select a Lift (4 x 8-10)", "DB Fly (4 x 10-12)"],B:{type:"exercises",items:["Chest-Supported Wide-Grip DB Row (4 x 8-10)", "DB Reverse Fly (4 x 10-12)"]},C:["Tricep Mechanical Drop Set \u2014 Cable (3 sets x 10 reps at 3 distances: furthest / mid / closest)", "DB Biceps Curls (3 x 15)"]},
+    thursday:{focus:"Lower \u2014 Deadlift / Hinge",A:["Trap Bar B-Stance RDL (4 x 8-10)", "GHG Hamstrings Curls (4 x 8-10)"],B:{type:"exercises",items:["GHG Lateral Lunge (4 x 8-10)", "Medball Groin Squeeze (4 x 30 secs)"]},C:["Goblet Carry (3 x 30 secs)", "GHG Knee Tucks (3 x 8-12)"]},
+    friday:{focus:"Upper \u2014 OHP / Pull / Accessories",A:["High Incline DB Bench Press (4 x 8-10)", "Rear Delt Raises \u2014 Head Supported (4 x 10-12)"],B:{type:"exercises",items:["Cable Lat Pull-Downs (4 x 8-10)", "1-Arm DB Row (4 x 10-12)"]},C:["ISO Lateral Raise (3 x 15-30 secs)", "DB Lateral Raise (3 x 6-8)"]}
+  }},
+  {id:"H2",label:"Cycle H2",name:"Mar\u2013Apr 2024 \u2014 Strength + Metabolic (5x4-6 Squat/Bench/DL, Optional Metabolic Finisher)",dates:"2024-03-04 to 2024-04-05",weeks:5,scheme:"Heavy main lifts (5 sets of 4-6 reps). Optional metabolic finisher or arms superset on upper days. Lower uses Hollow Holds and RDLs as secondary work.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["Squat Variation \u2014 Select a Lift (5 x 4-6)", "Hollow Holds (4 x 20-45 secs)"],B:{type:"exercises",items:["Lunge Variation \u2014 Select a Lift (4 x 10)", "DB RDL (4 x 10)"]},C:["Wall-Sit w/ Calf Raise ISO (3 x 15-30 secs)", "Tib Raise ISO w/ Chain (3 x 15-30 secs)", "Eccentric Cable Chop (3 x 6-8)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Bench Press Variation \u2014 Select a Lift (5 x 4-6)", "Prone Backburns (4 x 10)"],B:{type:"exercises",items:["Seated Cable Row (4 x 10)", "Push-Up Variation \u2014 Select a Lift (4 x 6-10)"]},C:["Alt ISO Bicep Curls (3 x 8-12)", "TRX Skullcrusher (3 x 8-12)"],finisher:"Metabolic Circuit (3 sets): Bike Sprint x 800m / Off-Set KB Carry x Down+Back / MB Overhead Slams x 10"},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["Deadlift Variation \u2014 Select a Lift (5 x 4)", "Front Plank with Banded Row (4 x 10)"],B:{type:"exercises",items:["Hamstrings Variation \u2014 Select a Lift (4 x 10)", "Overhead Plate March (4 x 10)"]},C:["GHD Back Extension ISO (3 x 30 secs)", "Side Bends (3 x 10-15)"]},
+    friday:{focus:"Upper \u2014 OHP / Pull / Accessories",A:["Seated DB OHP (4 x 8-12)", "Pull-Up/Down Variation \u2014 Select a Lift (4 x 6-8)"],B:{type:"exercises",items:["DB Floor Press (4 x 10)", "DB Shrugs (4 x 10)"]},C:["DB Front Raises (3 x 15)", "DB Lateral Raise (3 x 15)"],finisher:"Metabolic Circuit (3 sets): Bike Sprint x 800m / Off-Set KB Carry x Down+Back / MB Overhead Slams x 10"}
+  }},
+  {id:"H3",label:"Cycle H3",name:"Apr\u2013May 2024 \u2014 ISO Hold Activation + Wave Reps (4,6,8,10)",dates:"2024-04-08 to 2024-05-17",weeks:6,scheme:"Activation using ISO holds before main sets. Main lifts use ascending rep waves (4,6,8,10). Lower includes Copenhagen planks; upper includes ISO hold tricep pushdowns.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["Split Squat ISO Hold (4 x 20-30 secs, +8 reps after hold)", "GHG Hamstrings Curls (4 x 12-15)"],B:{type:"exercises",items:["Squat Variation \u2014 Select a Lift (4 x 4, 6, 8, 10)", "Copenhagen Side Plank (4 x 30 secs)"]},C:["Lying Leg Raises (4 x 15)", "Toes Elevated Calf Raise (4 x 15-20)", "Toe Walks (4 x 1 Down+Back)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Incline DB Bench Press (4 x 12-15)", "DB Reverse Fly (4 x 12-15)"],B:{type:"exercises",items:["Bench Press Variation \u2014 Select a Lift (4 x 4, 6, 8, 10)", "DB Pendlay Row (4 x 10)"]},C:["Rope Hammer Curls (4 x 10-15)", "Cable Triceps Push-Down ISO Hold (4 x 20 secs)", "Cable Triceps Push Downs (4 x 8)"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["Lateral Band Walks (4 x 15)", "DB B-Stance Rotational RDL (4 x 8)"],B:{type:"exercises",items:["Deadlift Variation \u2014 Select a Lift (4 x 4, 4, 6, 8)", "Paloff Press ISO Hold (4 x 30 secs)"]},C:["Fat Grip 1-Arm March (3 x 30 secs)", "Poliquin Step-Down (3 x 10)"]},
+    friday:{focus:"Upper \u2014 OHP / Pull / Accessories",A:["Push-Up Variation \u2014 Select a Lift (4 x 8-12)", "Pull-Up/Down Variation \u2014 Select a Lift (4 x 8-12)"],B:{type:"exercises",items:["Standing DB Overhead Press (4 x 8-12)", "Cable Face Pulls (4 x 15)"]},C:["Cable Overhead Triceps Extensions (4 x 10-15)", "DB Bicep Curl ISO Hold (4 x 20 secs)", "DB Biceps Curls (4 x 8)"]}
+  }},
+  {id:"H4",label:"Cycle H4",name:"May\u2013Jun 2024 \u2014 Movement Prep + Tempo (5-sec Eccentric, AMRAP Circuits)",dates:"2024-05-20 to 2024-06-28",weeks:6,scheme:"Extensive movement prep warm-ups (2-3 rounds). Main lifts with 5-sec eccentric at RPE 7-8. AMRAP circuits for accessories on lower days. Omni-Contraction arm work on upper days.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["FFE DB Split Squat (3 x 10) \u2014 Movement Prep 2-3 rounds", "Side Plank Clamshells (3 x 10)", "Banded Pull-Over Deadbug (3 x 10)"],B:{type:"exercises",items:["Squat Variation \u2014 Select a Lift (4 x 6, 6, 4, 4, 5-sec eccentric RPE 7-8)", "3-Way Calf Raise (3 x 15-20)"]},C:["Bike Sprint (3 x 30 secs)", "Rotational MB Slam (3 x 5)", "KB Swing (3 x 15)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Chest Supported Jared Press (3 x 10) \u2014 Movement Prep 2-3 rounds", "1-Arm DB Row with Retraction (3 x 10, 2-sec pause top + 3-sec down)", "1-Arm Tricep Pushdown \u2014 Cable or Banded (3 x 15)"],B:{type:"exercises",items:["Bench Press Variation \u2014 Select a Lift (4 x 6, 6, 5, 5, 5-sec eccentric RPE 7-8)", "Oblique Side Plank Rotations (3 x 10)"]},C:["Omni-Contraction Arm Farm AMSAP \u2014 Bicep Curls + Skull Crushers or Pushdowns (3 rounds): 5 reps 5-sec down / 1 rep 5-sec hold at halfway / 5 reps full ROM"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["GHG Hamstrings Curls (3 x 6-8, 2 up + 1 down, 3-sec down) \u2014 Movement Prep", "1-Leg RDL Banded Toe Tap (3 x 15)", "Bear Plank Pull-Through (3 x 8)"],B:{type:"exercises",items:["Deadlift Variation \u2014 Select a Lift (4 x 6, 6, 5, 5, 3-sec eccentric RPE 7-8)", "1-Leg Calf Raise with ISO Hold (3 x 30 secs)"]},C:["Goblet Lateral Lunge (3 x 10)", "Medball Bent Over Chest Pass (3 x 10)", "GHG Knee Tucks (3 x 8-12)"]},
+    friday:{focus:"Upper \u2014 Push / Pull / Accessories",A:["Eccentric Push-Up (4 x 5-8)", "Incline DB Chest Fly (4 x 12)"],B:{type:"exercises",items:["Pull-Up/Down Variation \u2014 Select a Lift (4 x 5-8)", "Dead Stop 1-Arm KB Row (4 x 10-12)"]},C:["Omni-Contraction DB Lateral Raise (3 x 10): 5 reps 5-sec down / 1 rep 5-sec hold / 5 reps full ROM", "DB Shrugs (3 x 15-20)"]}
+  }},
+  {id:"H5",label:"Cycle H5",name:"Jul 2024 \u2014 Mobility Prep + AMRAP Circuits (8-10-10-10 rep scheme)",dates:"2024-07-01 to 2024-08-09",weeks:6,scheme:"Dedicated mobility prep (2 rounds). Main lifts ascending reps (8,8,10,10) at RPE 7-8. 12-minute AMRAP circuits for accessories. Rest-pause technique for arm work on Friday.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["Supine KB Hip Flexion (2 x 8) \u2014 Mobility Prep", "GHG Adductor Slides (2 x 8)", "Heel Elevated Goblet Squat (2 x 8, 5-sec down / 3-sec pause at bottom)"],B:{type:"exercises",items:["Squat Variation \u2014 Select a Lift (4 x 8, 8, 10, 10 RPE 7-8)"]},C:["12-Minute AMRAP Circuit: Goblet Bulgarian Split Squats (x 6-8) / Ab Variation (x 8-12) / Hamstrings Variation (x 10-15)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["I/Y/T's (2 x 15) \u2014 Mobility Prep", "Incline DB Chest Fly (2 x 20)", "Cable Overhead Triceps Extensions (2 x 20)"],B:{type:"exercises",items:["Bench Press Variation \u2014 Select a Lift (4 x 8, 8, 10, 10 RPE 7-8)", "Seated DB Biceps Curls (4 x 15, 12, 10, AMAP)"]},C:["12-Minute AMRAP Circuit: Seated Cable Row (x 6-8) / Side Leaning Lateral Raise (x 8-10) / 1-Arm KB March (x 10)"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["Overhead Plate Side Bend (2 x 6-8) \u2014 Mobility Prep", "Low Back Variation \u2014 Select a Lift (2 x 15)", "Side Plank Separations (2 x 10)"],B:{type:"exercises",items:["Deadlift Variation \u2014 Select a Lift (1 x 5 top set RPE 7-8, then 3 x 6 at -10-20 lbs)"]},C:["12-Minute AMRAP Circuit: B-Stance RDL Lunge (x 8) / Tib Raises (x 15-20) / DB Deficit Calf Raises (x 15-20)"]},
+    friday:{focus:"Upper \u2014 OHP / Pull / Accessories",A:["1 1/2 Seated DB OHP (4 x 6-8)", "Seated DB Front Raise (4 x 12)"],B:{type:"exercises",items:["Pull-Up/Down Variation \u2014 Select a Lift (4 x 6-10)", "1 1/2 DB Bench Press (4 x 8-12)"]},C:["Curl Variation REST PAUSE \u2014 Select a Lift (4 x 24: 8 reps / 15-20 sec rest / 8 reps / 15-20 sec rest / 8 reps)", "Tricep Variation REST PAUSE \u2014 Select a Lift (4 x 24: same format)"]}
+  }},
+  {id:"H6",label:"Cycle H6",name:"Aug\u2013Sep 2024 \u2014 Heavy Strength (5x4 RPE 7-8, Accessories + Metabolic)",dates:"2024-08-12 to 2024-09-20",weeks:6,scheme:"Very heavy main lifts (5 sets of 4 at RPE 7-8, 2-3 reps in tank). Dedicated mobility warm-up. Traditional accessories and metabolic conditioning mixed in.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["Supine KB Hip Flexion (2 x 8, use blocks for more ROM) \u2014 Mobility Prep", "Lateral Squat ISO (2 x 15 secs, +5 reps)", "1-Leg Heel Dig Pulses on Foam Roller (2 x 8-12)"],B:{type:"exercises",items:["Squat Variation \u2014 Select a Lift (5 x 4, RPE 7-8, 2-3 reps in tank)"]},C:["Deficit DB Reverse Lunges (4 x 6-8)", "Hanging Knee Raises (4 x 8-12)", "Russian Twists (4 x 10)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Prone T-Press Outs (2 x 10) \u2014 Mobility Prep", "Flat DB Chest Flys (2 x 20)", "Cable Overhead Triceps Extensions (2 x 20)"],B:{type:"exercises",items:["Bench Press Variation \u2014 Select a Lift (5 x 4, RPE 7-8)", "Cable Lat Pull-Downs (4 x 6-8)"]},C:["DB Zottman Curls (4 x 8-12)", "DB Rotational Skull Crusher (4 x 8-12)", "Fat Grip 2-Arm Carry (4 x 1 down+back)"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["Side Bend Variation \u2014 Select a Lift (2 x 8) \u2014 Mobility Prep", "Low Back Variation \u2014 Select a Lift (2 x 15)", "Bear Plank Reach (2 x 8, 3-5 sec hold each)"],B:{type:"exercises",items:["Deadlift Variation \u2014 Select a Lift (5 x 4, RPE 7-8)"]},C:["Hamstrings Variation \u2014 Select a Lift (4 x 8-12)", "DB Lateral Step-Downs (4 x 8)", "Tall Kneeling Chop (4 x 8)"]},
+    friday:{focus:"Upper \u2014 Push / Pull / Metabolic",A:["High Incline DB Bench Press (4 x 12, 10, 8, 8)", "Cable Rear Delt Fly (4 x 12-15)"],B:{type:"exercises",items:["Chest Supported Cable Row (4 x 12, 10, 8, 8)", "Arnold Press (4 x 10-12)"]},C:["Bike Sprint (3 x 30 secs)", "Renegade Row (3 x 8)", "Overhead MB Slams (3 x 8)"]}
+  }},
+  {id:"H7",label:"Cycle H7",name:"Sep\u2013Oct 2024 \u2014 1.5-Rep Strength (4-6 reps, Extended ROM)",dates:"2024-09-30 to 2024-11-08",weeks:6,scheme:"1-and-a-half rep technique on main lifts (lower stops at half-rep then returns to bottom before full rep). Upper also uses 1&1/2 on accessory pulls/flys. Core stability focus.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["Foam Roller Groin Squeeze (2 x 5, 5-sec push each)", "Single Leg Squat (2 x 10)", "Heel/Toe Hamstring on Foam Roller (2 x 6-8)"],B:{type:"exercises",items:["Squat Variation \u2014 Select a Lift (4 x 4-6, 1&1/2 squats each rep)"]},C:["Lunge Variation \u2014 Select a Lift (3 x 8)", "Heel Elevated Body Weight Squat (3 x 8-12, as slow as possible)", "Front Plank with Banded Row (3 x 10)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Banded T Pull-Apart (2 x 12-15)", "Push-Up Variation \u2014 Select a Lift (2 x 6-12)", "Band Triceps Push-Downs (2 x 15-20)"],B:{type:"exercises",items:["Bench Press Variation \u2014 Select a Lift (4 x 4-6, 1&1/2 reps each)"]},C:["Alternating ISO DB Skull Crushers (3 x 8-12)", "Incline DB Curls (3 x 8-12)", "Seated Cable Row (3 x 8-12)"]},
+    thursday:{focus:"Lower \u2014 Deadlift / Hinge",A:["Hamstrings Variation \u2014 Select a Lift (2 x 12)", "GHG Lateral Lunge (2 x 10)", "Low Back Variation \u2014 Select a Lift (2 x 8-12)"],B:{type:"exercises",items:["Barbell RDL (4 x 4-6, 3-sec eccentric)"]},C:["Hip Thrusts (3 x 8)", "Side Plank with Hip Abduction (3 x 15 secs, +5 reps after hold)", "Bear Plank Pull-Through (3 x 8)"]},
+    friday:{focus:"Upper \u2014 OHP / Pull / Core",A:["Overhead Press Variation \u2014 Select a Lift (4 x 12, 12, 10, 8)", "DB Reverse Fly (4 x 12-15)"],B:{type:"exercises",items:["Cable Lat Pull-Downs \u2014 1&1/2 reps (4 x 8)", "Incline DB Chest Fly \u2014 1&1/2 reps (4 x 8-12)"]},C:["Hollow Holds (3 x 30 secs)", "Lying Leg Raises (3 x AMRAP)", "Side Planks (3 x 20-30 secs)"]}
+  }},
+  {id:"H8",label:"Cycle H8",name:"Nov\u2013Dec 2024 \u2014 Challenge Sets + Dropsets (10,8,6,10-12 rep scheme)",dates:"2024-11-11 to 2024-12-20",weeks:6,scheme:"Descending-then-back rep scheme (10,8,6,10-12). Challenge set on final set (heavier than first). Optional dropset finishers for isolation work (quad, hamstring, arms).",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["Copenhagen Side Plank (3 x 30 secs, +5 reps after hold)", "GHG Body Saw (3 x 8)", "Calf Raises (3 x 15-20)"],B:{type:"exercises",items:["Squat Variation \u2014 Select a Lift (4 x 10, 8, 6, 10-12 \u2014 challenge final set)"]},C:["B-Stance RDL (3 x 8, 3-sec eccentric)", "Dragon Flys (3 x 8-12)"],finisher:"Leg Extension Dropset (1 x AMRAP): 8-12 reps \u2192 drop 10-15 lbs \u2192 8-12 reps to failure"},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["1-Arm Banded Reverse Fly (3 x 10-12, +5 mini circles each direction)", "Crossover Cable 1-Arm Row (3 x 8-10)", "Push-Up Variation \u2014 Select a Lift (3 x 6-12)"],B:{type:"exercises",items:["Bench Press Variation \u2014 Select a Lift (4 x 10, 8, 6, 10-12 \u2014 challenge final set)"]},C:["Wall-Supported DB Bicep Curls (3 x 8-12, last set dropset)", "1-Arm Cable Pushdown (3 x 8-12)"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["Hamstrings Variation \u2014 Select a Lift (3 x 12-15)", "Side Plank Separations (3 x 10)", "Goodmorning Variation \u2014 Select a Lift (3 x 8-12)"],B:{type:"exercises",items:["Deadlift Variation \u2014 Select a Lift (4 x 8, 6, 4, 6-8)"]},C:["FFE DB Split Squat (3 x 8)", "1-Arm KB Front Rack March (3 x 10)"],finisher:"Prone Machine Hamstrings Curls Dropset (1 x AMRAP): 8-12 reps \u2192 drop 10-15 lbs \u2192 8-12 reps to failure"},
+    friday:{focus:"Upper \u2014 OHP / Pull / Conditioning",A:["Overhead Press Variation \u2014 Select a Lift (4 x 4, 6, 8, 10)", "Pull Up Variation \u2014 Select a Lift (4 x 6-12)"],B:{type:"exercises",items:["Incline DB Chest Fly (4 x 12-15)", "Cable Overhead Triceps Extensions (4 x 10-12, last set dropset: drop 1-2 pins \u2192 8-12 reps to failure)"]},C:["Bike Sprint (4 x 20 secs)", "Tall Kneeling MB Slams (4 x 10)", "Russian Twists (4 x 8-10)"]}
+  }},
+  {id:"H9",label:"Cycle H9",name:"Jan\u2013Feb 2025 \u2014 Pause Reps + Simplified Structure (6-8 reps, Bodyweight Activation)",dates:"2025-01-13 to 2025-02-21",weeks:6,scheme:"Pause reps on squat/bench (2-3 sec hold at bottom). Simplified activation warm-ups. Deadlift single straight set. Fewer accessory exercises per day.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["DB Bulgarian Split Squat (3 x 10)", "Hamstrings Variation \u2014 Select a Lift (3 x 15)", "Knee Over Toe Calf Raise (3 x 15)"],B:{type:"exercises",items:["Squat Variation \u2014 Select a Lift (4 x 6-8, PAUSE REPS: 2-3 sec at bottom)"]},C:["1/2 Kneeling Cable Chop (3 x 8)", "Tib Raises (3 x 15)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Cable Face Pulls (3 x 15)", "Push-Up ISO Hold (3 x 4-6, 3-5 sec hold at bottom each rep)", "1-Arm DB Tricep Kickback (3 x 15)"],B:{type:"exercises",items:["Bench Press Variation \u2014 Select a Lift (4 x 6-8, PAUSE REPS: 2-3 sec at bottom)"]},C:["Seated Cable Row (3 x 8-12)", "Incline DB Chest Fly (3 x 8-12)"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["Long Lever Plank (3 x 30-45 secs)", "Heel/Toe Hamstring on Foam Roller (3 x 10)", "Goodmorning Variation \u2014 Select a Lift (3 x 8-12)"],B:{type:"exercises",items:["Deadlift Variation \u2014 Select a Lift (4 x 6)"]},C:["DB Lateral Squat (3 x 8)", "Ab Rollouts (3 x 8-12)"]},
+    friday:{focus:"Upper \u2014 OHP / Pull / Accessories",A:["DB Lateral Raise (3 x 15)", "Pull-Up/Down Variation \u2014 Select a Lift (3 x 5-12)"],B:{type:"exercises",items:["Overhead Press Variation \u2014 Select a Lift (4 x 8-10)", "Cable Bicep Curl (4 x 10-12)"]},C:["DB Shrugs (4 x 8-10)", "Cable Triceps Push Downs (4 x 10-12)"]}
+  }},
+  {id:"H10",label:"Cycle H10",name:"Feb\u2013Mar 2025 \u2014 Ascending Volume (5x5-9, REST PAUSE Arms)",dates:"2025-02-24 to 2025-03-28",weeks:5,scheme:"Ascending rep scheme per set (5,6,7,8,9) across 5 sets. REST PAUSE technique on arm work (8 reps / 20-sec rest / 8 reps). ISO activation warm-ups for lower. Low to high cable chops.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["Bulgarian Split Squat ISO (3 x 20-30 secs)", "Side Plank Clamshells (3 x 10)", "Hip Airplanes (3 x 8)"],B:{type:"exercises",items:["Squat Variation \u2014 Select a Lift (5 x 5, 6, 7, 8, 9)"]},C:["GHG Body Saw (3 x 8)", "1-Leg Elevated Calf Raises (3 x 12-15)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Push-Up Variation \u2014 Select a Lift (3 x 6-12)", "Sidelying Plate Circuit (3 x 6 each direction, slow and controlled)", "Banded Triceps Push-Downs (3 x 15-20)"],B:{type:"exercises",items:["Bench Press Variation \u2014 Select a Lift (5 x 5, 6, 7, 8, 9)"]},C:["1-Arm Paused DB Row (3 x 8-12)", "Side Leaning Lateral Raise (3 x 12, +5 partials)"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["Goblet Lateral Lunge (3 x 8)", "1-Leg Heel Digs on Foam Roller (3 x 20-30 secs, +5 bridges after hold)", "Deadbug ISO-Holds with FR (3 x 20-30 secs, +5 reps each leg after)"],B:{type:"exercises",items:["Deadlift Variation \u2014 Select a Lift (5 x 4)"]},C:["Hamstrings Variation \u2014 Select a Lift (3 x 10-15)", "Tall Kneeling Cable Chop \u2014 Low to High (3 x 8)"]},
+    friday:{focus:"Upper \u2014 OHP / Pull / Accessories",A:["Pull-Up/Down Variation \u2014 Select a Lift (4 x 6-12)", "DB Skullcrushers REST PAUSE (3 x 16: 8 reps / 20-sec rest / 8 reps)"],B:{type:"exercises",items:["Overhead Press Variation \u2014 Select a Lift (4 x 6-8)", "DB Hammer Curls REST PAUSE (3 x 16: 8 reps / 20-sec rest / 8 reps)"]},C:["DB Shrugs (4 x 10-12)", "DB Reverse Fly (4 x 12-15)"]}
+  }},
+  {id:1,label:"Cycle 1",name:"Apr\u2013May 2025 \u2014 Strength (5-Rep Progressions, Eccentric Focus)",dates:"2025-03-31 to 2025-05-09",weeks:6,scheme:"5-rep eccentric-focused strength progression on squat/bench/deadlift. Main lifts descend then wave with AMAP finisher in final weeks.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["Tempo Goblet Stepdown (3 x 4-6)", "Side Plank with Hip Abduction (3 x 10)"],B:{type:"main",exercise:"Squat Variation \u2014 Select a Lift (5 x 4-6, 5-sec eccentric)",weekly:["5x4-6", "5x4-6", "5x3-5", "5x6-8", "5x5-7", "5x5,6,7,8,AMAP"]},C:["Leg Extension (5 x 10-15)", "Hollow Holds (5 x 20-30 secs)", "Bench Supported Calf Raises (5 x 10-15)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Push-Up Variation \u2014 Select a Lift (3 x 6-12)", "DB Upright Row (3 x 12)"],B:{type:"main",exercise:"Bench Press Variation \u2014 Select a Lift (5 x 4-6, 5-sec eccentric)",weekly:["5x4-6", "5x4-6", "5x3-5", "5x6-8", "5x5-7", "5x4,5,6,7,AMAP"]},C:["Incline DB Chest Fly (5 x 10)", "Seated Cable Row (5 x 10)", "Underhand Band Pull Aparts (5 x 15)"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["GHG Lateral Lunge (3 x 10)", "Deadbug ISO-Holds with FR (3 x 30-45 secs)"],B:{type:"main",exercise:"Deadlift Variation \u2014 Select a Lift (5 x 5)",weekly:["5x4-6", "5x4-6", "5x3-5", "5x5-7", "5x5-7", "5xAMAP"]},C:["Bike Sprint (5 x 30 secs)", "1-Leg Hip Thrust (5 x 8)", "Side Bends (5 x 8)"]},
+    friday:{focus:"Upper \u2014 Pull / OHP / Accessories",A:["Pull-Up/Down Variation \u2014 Select a Lift (4 x 6-12)", "Cable Crossbody Tricep Extension (3 x 16 REST PAUSE: 8 reps, 20-sec rest, 8 reps)"],B:{type:"exercises",items:["Overhead Press Variation \u2014 Select a Lift (4 x 5-8, 5-sec eccentric)", "Incline Biceps Curls (3 x 16 REST PAUSE: 8 reps, 20-sec rest, 8 reps)"]},C:["Cable Pull Overs (4 x 10-12)", "DB Lateral Raise (4 x 10-15)"]}
+  }},
+  {id:2,label:"Cycle 2",name:"May\u2013Jun 2025 \u2014 Strength-Hypertrophy (Eccentric + Deadlift Volume)",dates:"2025-05-12 to 2025-06-20",weeks:6,scheme:"Eccentric-focused 5-rep clusters on squat/bench. Deadlift volume builds: 5x5 \u2192 5x4 \u2192 5x3. Friday OHP also eccentric.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["Low Forward + Reverse Lunge (3 x 8-10)", "Side Plank Separations (3 x 10)"],B:{type:"main",exercise:"Squat Variation \u2014 Select a Lift (5 x 4-6, eccentric focused)",weekly:["5x4-6 eccentric", "5x4-6 eccentric", "5x3-5", "5x6-8", "5x5-7", "5x AMAP"]},C:["Hamstrings Variation \u2014 Select a Lift (4 x 10-15)", "Banded Pull-Over Dead Bug (4 x 10)", "Bench Supported Calf Raises (4 x 10-15)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Plate Backburns (3 x 8-10)", "Bent Over MB Chest Pass (3 x 6-8, as explosive as possible)"],B:{type:"main",exercise:"Bench Press Variation \u2014 Select a Lift (5 x 4-6, eccentric focused)",weekly:["5x4-6 eccentric", "5x4-6 eccentric", "5x3-5", "5x6-8", "5x5-7", "5xAMAP"]},C:["Cable Lat Pull-Downs (4 x 10)", "1 1/2 Incline DB Chest Fly (4 x 10)", "Alternating ISO DB Skull Crushers (4 x 8-10)"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["Goblet Cossack Squats (3 x 8)", "Side Bend Variation \u2014 Select a Lift (3 x 10)"],B:{type:"main",exercise:"Deadlift Variation \u2014 Select a Lift (5 x 5)",weekly:["5x5", "5x5", "5x4", "5x4", "5x3", "5x3"]},C:["Bike Sprint (4 x 15 secs)", "1-Leg Hip Thrust (4 x 8)", "MB Lying Leg Raise (4 x 10-15)"]},
+    friday:{focus:"Upper \u2014 Pull / OHP / Accessories",A:["Pull-Up/Down Variation \u2014 Select a Lift (4 x 6-12)", "Side Leaning Lateral Raise (3 x 8-12)"],B:{type:"exercises",items:["Overhead Press Variation \u2014 Select a Lift (4 x 6-8, eccentric focused)", "Incline DB Hammer Curls (3 x 8-12)"]},C:["Cable Pull Overs (4 x 12-15)", "Push-Up Variation \u2014 Select a Lift (3 x AMRAP)"]}
+  }},
+  {id:3,label:"Cycle 3",name:"Jun\u2013Aug 2025 \u2014 Volume/Hypertrophy (High Rep Straight Sets)",dates:"2025-06-23 to 2025-08-01",weeks:6,scheme:"High-rep straight sets (10s) across squat/bench; deadlift at 5s. Accessories are 3\u20134 rounds of higher rep work.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["Hamstrings Variation \u2014 Select a Lift (3 x 10-15)", "Side Plank Hip Abduction ISO (3 x 30 secs)"],B:{type:"main",exercise:"Squat Variation \u2014 Select a Lift (4 x 10)",weekly:["4x10", "4x10", "4x8", "4x8", "4x6", "4x6"]},C:["Lean Away Leg Extensions (4 x 10-15)", "Hanging Knee Raises (4 x 8-12)", "1-Leg Heel Digs (4 x ALAP)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Chest Supported I's Y's T's (3 x 10)", "Tall Kneeling MB Rotational Slam (3 x 8)"],B:{type:"main",exercise:"Bench Press Variation \u2014 Select a Lift (4 x 10)",weekly:["4x10", "4x10", "4x8", "4x8", "4x6", "4x6"]},C:["1-Arm DB Wide Grip Row (4 x 8-12)", "Cable Tricep Push Down (4 x 8-12)", "Eccentric DB Lateral Raises (4 x 8-12, cheat up/fight descent)"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["Copenhagen Hip Lifts (3 x 10-15)", "90/90 Hip IR ISO (3 x 5-8, 3-sec hold at top)"],B:{type:"main",exercise:"Deadlift Variation \u2014 Select a Lift (4 x 5)",weekly:["4x5", "4x5", "4x5", "4x4", "4x4", "4x3"]},C:["Bike Sprint (4 x 45 secs)", "KB Swing (4 x 8)", "Russian Twists (4 x 8)"]},
+    friday:{focus:"Upper \u2014 OHP / Pull / Accessories",A:["Overhead Press Variation \u2014 Select a Lift (4 x 10)", "Wall-Supported DB Bicep Curls (4 x 12-15)"],B:{type:"exercises",items:["Pull-Up/Down Variation \u2014 Select a Lift (4 x 10)", "Triceps Banded Crossover Extension (4 x AMRAP)"]},C:["Fat Grip DB Chest Fly (4 x 10-15)", "DB Shrugs (4 x 10-15)"]}
+  }},
+  {id:4,label:"Cycle 4",name:"Aug\u2013Sep 2025 \u2014 Strength (5-Rep + Drop, Ascending, Peak)",dates:"2025-08-04 to 2025-09-12",weeks:6,scheme:"Main lifts at straight sets then drop reps. Friday OHP/Pull at 6-8 rep range. Accessory work at 8-12 reps.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["Hamstring Curl Variation (3 x 15-20)", "Side Plank Hip Lift w/ Abduction (3 x 10)"],B:{type:"main",exercise:"Squat Variation \u2014 Select a Lift (4 x 10)",weekly:["4x10", "4x10", "4x8", "4x6", "4x5", "4x4"]},C:["2 DB/KB Split Squat (4 x 8)", "V Sit Ups (4 x 10-15)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Rear Delt Raises (3 x 15)", "1-Arm Plank (3 x 20-30 secs)"],B:{type:"main",exercise:"Bench Press Variation \u2014 Select a Lift (4 x 10)",weekly:["4x10", "4x10", "4x8", "4x6", "4x5", "4x4"]},C:["Seated Cable Row (4 x 8-12)", "Flat DB Chest Flys (4 x 8-12)", "Eccentric DB Bicep Curl (4 x 8-12, 5-sec down)"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["Copenhagen Hip Lifts (3 x 10-15)", "Goblet Step-Downs (3 x 10)"],B:{type:"main",exercise:"Deadlift Variation \u2014 Select a Lift (4 x 5)",weekly:["4x5", "4x5", "4x4", "4x4", "4x3", "4x2"]},C:["Bike Sprint (4 x 30 secs)", "KB Swing (4 x 10)", "Tall Kneeling Pallof Press (4 x 8)"]},
+    friday:{focus:"Upper \u2014 Triceps / Pull / OHP / Accessories",A:["Cable Overhead Triceps Extensions (4 x 10-15)", "Pull-Up/Down Variation \u2014 Select a Lift (4 x 6-8)"],B:{type:"exercises",items:["Overhead Press Variation \u2014 Select a Lift (4 x 6-8)", "Banded Crossover Reverse Fly (4 x 15)"]},C:["DB Partial ROM Lateral Raise (3 x 10-15)", "Fat Grip Hammer Curl (3 x 10-15)"]}
+  }},
+  {id:5,label:"Cycle 5",name:"Sep\u2013Nov 2025 \u2014 Low-Rep Strength (Cluster Sets, Deadlift Peak)",dates:"2025-09-22 to 2025-10-31",weeks:6,scheme:"Lower rep clusters on all main lifts. Squat/bench build from 5 to 4 to 3. Deadlift peaks with 4,3,2,1. Accessories stay consistent at 8-12 reps.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["DB Lateral Squat (3 x 10)", "Bear Plank Pull Through (3 x 30 secs)"],B:{type:"main",exercise:"Squat Variation \u2014 Select a Lift (4 x 5)",weekly:["4x5", "4x5", "4x4", "4x4", "4x3", "4x3"]},C:["Hamstrings Variation \u2014 Select a Lift (4 x 10-12)", "Hip Abduction (4 x 12-15)", "Side Bends (3 x 10)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["Cable Lat Pull-Downs (3 x 10-12)", "DB Reverse Fly (3 x 10-12)"],B:{type:"main",exercise:"Bench Press Variation \u2014 Select a Lift (4 x 5)",weekly:["4x5", "4x5", "4x4", "4x4", "4x3", "4x3"]},C:["DB Skullcrushers (4 x 8-12)", "Wall-Supported DB Bicep Curls (4 x 8-12)", "Rotational MB Slam (3 x 10)"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["DB Step-Downs (3 x 10)", "Medball Groin Squeeze (3 x 15-30)"],B:{type:"main",exercise:"Deadlift Variation \u2014 Select a Lift (4 x 4)",weekly:["4x4", "4x4", "4x3", "4x3", "4x2", "4x1"]},C:["Lying Leg Raises (4 x 8-12)", "Glute Bridge Variation \u2014 Select a Lift (4 x 10-15)", "Bike Sprint (3 x 15-30 secs)"]},
+    friday:{focus:"Upper \u2014 Incline Bench / Row / Accessories",A:["Incline Bench Press Variation \u2014 Select a Lift (4 x 8-12)", "Banded Y Raises (3 x 12-15)"],B:{type:"exercises",items:["1-Arm Paused DB Row (4 x 8-12)", "Cable Tricep Push Down (4 x 8-12)"]},C:["Off-Set March (3 x 30-45 secs)", "Side Leaning Lateral Raise (3 x 8-12)"]}
+  }},
+  {id:6,label:"Cycle 6",name:"Nov 2025\u2013Jan 2026 \u2014 Wave Loading (Pyramid Down then Straight Sets)",dates:"2025-11-10 to 2026-01-09",weeks:8,scheme:"Unique wave-loading scheme: 5 sets per main lift. Starts at 10,8,6,8,10 wave and descends (9,7,5,7,9 \u2192 8,6,4,6,8 \u2192 7,5,3,5,7) then resets to straight sets at 8.",days:{
+    monday:{focus:"Lower \u2014 Squat",A:["Goblet Lateral Lunge (3 x 10)", "Cable Pallof Press (3 x 10)"],B:{type:"main",exercise:"Squat Variation \u2014 Select a Lift (5 x 10, 8, 6, 8, 10)",weekly:["Wk1: 5x10,8,6,8,10", "Wk2: 5x10,8,6,8,10", "Wk3: 5x9,7,5,7,9", "Wk4: 5x9,7,5,7,9", "Wk5: 5x8,6,4,6,8", "Wk6: 5x7,5,3,5,7", "Wk7: 5x8,8,8,8,8 (straight sets reset)", "Wk8: 5x8,8,8,8,8"]},C:["Hamstrings Variation \u2014 Select a Lift (4 x 15)", "Ab Rollouts (4 x 8-12)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press",A:["DB Upright Row (3 x 12-15)", "Banded Pull Aparts (3 x 15-20)"],B:{type:"main",exercise:"Bench Press Variation \u2014 Select a Lift (5 x 10, 8, 6, 8, 10)",weekly:["Wk1: 5x10,8,6,8,10", "Wk2: 5x10,8,6,8,10", "Wk3: 5x9,7,5,7,9", "Wk4: 5x9,7,5,7,9", "Wk5: 5x8,6,4,6,8", "Wk6: 5x7,5,3,5,7", "Wk7: 5x8,8,8,8,8 (straight sets reset)", "Wk8: 5x8,8,8,8,8"]},C:["Alternating ISO DB Lateral Raise (4 x 10)", "Cable Tricep Push Down (4 x 15)", "DB Biceps Curls (4 x 15)"]},
+    thursday:{focus:"Lower \u2014 Deadlift",A:["1-Leg Hip Thrust (3 x 10-15)", "Standing Banded Hip Flexion (3 x 10-15)", "RKC Plank (3 x 30-45 secs)"],B:{type:"main",exercise:"Deadlift Variation \u2014 Select a Lift (5 x 5)",weekly:["5x5 (estimated parallel to bench/squat wave)"]},C:["Leg Extension (4 x 15)", "2-Arm DB March (4 x 30 secs)"]},
+    friday:{focus:"Upper \u2014 Incline Bench / Pull / Accessories",A:["Incline Bench Press Variation \u2014 Select a Lift (4 x 8-12)", "Pull-Up/Down Variation \u2014 Select a Lift (4 x 6-12)"],B:{type:"exercises",items:["Seated Cable Row (4 x 8-12)", "Flat DB Chest Flys (4 x 12-15)"]},C:["1-Arm KB Shrugs (3 x 15)", "DB Reverse Fly (3 x 15)"]}
+  }},
+  {id:7,label:"Cycle 7",name:"Jan\u2013Feb 2026 \u2014 OHP Focus (Descending Rep, Tempo Deadlift)",dates:"2026-01-12 to 2026-02-20",weeks:6,scheme:"Squat descends from 6-8 to 4-6. Bench also descends. Deadlift uses TEMPO (2 sec up, 2-3 sec down) at 4-5 reps. Friday OHP descends 8-10 \u2192 4-6 then peaks.",days:{
+    monday:{focus:"Lower \u2014 Split Squat / Jumps",A:["Goblet Split Squat Pulses (3 x 10)", "Hamstrings Variation \u2014 Select a Lift (3 x 12)", "Pogo Circuit (AMSAP)"],B:{type:"main",exercise:"Squat Variation \u2014 Select a Lift (4 x 6-8)",weekly:["4x6-8", "4x6-8", "4x5-6", "4x5-6", "4x4-5", "4x4-5"]},C:["DB Bulgarian Split Squat (4 x 10)", "Side Plank With Rotation (4 x 10)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press / Rotational Power",A:["Rotational MB Throw (3 x 8)", "Prone Backburns (3 x 8)", "1-Arm Cable Pull-Down (3 x 10)"],B:{type:"main",exercise:"Bench Press Variation \u2014 Select a Lift (4 x 6-8)",weekly:["4x6-8", "4x6-8", "4x5-6", "4x5-6", "4x4-5", "4x4-5"]},C:["Renegade Row (4 x 8)", "DB Skullcrushers (4 x 12)"]},
+    thursday:{focus:"Lower \u2014 Deadlift (Tempo)",A:["Goblet Wall Cossack Squat (3 x 10)", "B-Stance RDL (3 x 8)", "Banded Mountain Climbers (3 x 6-8)"],B:{type:"main",exercise:"Deadlift Variation \u2014 Select a Lift (4 x 5, TEMPO: up 2 sec, down 2-3 sec)",weekly:["4x5", "4x5", "4x4", "4x4", "4x3", "4x3"]},C:["2-Arm Carry (4 x 45 secs)", "Foot Elevated 1-Leg Calf Raise (4 x 12-15)"]},
+    friday:{focus:"Upper \u2014 OHP / Row / Accessories",A:["Overhead Press Variation \u2014 Select a Lift (4 x 8-10)", "Banded Y Raises (4 x 15)"],B:{type:"exercises",items:["Wide Grip Seated Row (4 x 8)", "DB Chest Fly on MB (4 x 12)"]},C:["Cable Curls Facing Away (3 x 15)", "DB Lateral Raise (3 x 12-15)"]}
+  }},
+  {id:8,label:"Cycle 8",name:"Feb\u2013Mar 2026 \u2014 Hypertrophy Block (Descending Sets, Fixed Accessories)",dates:"2026-02-23 to 2026-03-27",weeks:5,scheme:"Main lifts start at straight 10s, descend: 10\u219210\u21928,8,x,x\u21926\u21926,6,4,4 (squat/bench). Deadlift: 4\u21924\u21924\u21924\u21924,4,3,3. Friday accessories are FIXED across all weeks (no progression).",days:{
+    monday:{focus:"Lower \u2014 Squat / Split Squat / Hamstrings",A:["Split Squat Switches (3 x 8)", "Front Plank with Banded Row (3 x 10)", "Hamstrings Variation \u2014 Select a Lift (3 x 10-15)"],B:{type:"main",exercise:"Squat Variation \u2014 Select a Lift",weekly:["4 x 10", "4 x 10", "4 x 8", "4 x 6", "4 x 6, 6, 4, 4"]},C:["DB Bulgarian Split Squat (4 x 6-8 wk4 / 4 x 8-10 wk5)", "Side Bend Variation \u2014 Select a Lift (4 x 10-15)"]},
+    tuesday:{focus:"Upper \u2014 Bench Press / Row",A:["Rear Delt Raises (3 x 15)", "MB OH Slam to Chest Pass (3 x 6)", "Cable Face Pulls (3 x 15)"],B:{type:"main",exercise:"Bench Press Variation \u2014 Select a Lift",weekly:["4 x 8", "4 x 8", "4 x 8, 8, descending cluster", "4 x 6", "4 x 6, 6, 4, 4"]},C:["Tempo 1-Arm DB Row (4 x 10 wk4 / 4 x 12 wk5)", "Push-Up Variation \u2014 Select a Lift (4 x 6-12)"]},
+    thursday:{focus:"Lower \u2014 Deadlift / Core",A:["Goblet Lateral Squat ISO (3 x 30 secs)", "45 Degree Back Ext (3 x 10-15)", "Depth Landing (3 x 6, stick and hold 2 secs)"],B:{type:"main",exercise:"Deadlift Variation \u2014 Select a Lift",weekly:["4 x 4", "4 x 4", "4 x 4", "4 x 4", "4 x 4, 4, 3, 3"]},C:["1/2 Kneeling Cable Chop (4 x 10)", "1-Leg Extension (4 x 15)"]},
+    friday:{focus:"Upper \u2014 Lat Pull / OHP / Triceps / Curls (FIXED across all weeks)",A:["Cable Lat Pull-Downs (4 x 8)", "Incline DB Lateral Raises (4 x 12)"],B:{type:"exercises",items:["Seated DB OHP (4 x 8)", "DB Hammer Curls (4 x 12)"]},C:["DB Skullcrushers (3 x 10)", "Close Grip DB Bench Press (3 x 12-15)", "Cable Curls Facing Away (3 x 15)"]}
+  }},
 ];
 
 // ─── Storage ─────────────────────────────────────────────────────────────────
@@ -578,9 +182,17 @@ const pStore = {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function setsReps(day, weekNum) {
-  if (!day.mainLift) return null;
-  const arr = day.mainLift.weekly;
-  return arr[Math.min(weekNum - 1, arr.length - 1)] || arr[arr.length - 1];
+  const B = day && day.B;
+  if (!B || B.type !== "main" || !B.weekly) return null;
+  return B.weekly[Math.min(weekNum - 1, B.weekly.length - 1)];
+}
+
+// Parse "Exercise Name (3 x 10-12)" → {name, sr}
+function parseEx(str) {
+  if (!str) return { name: "", sr: null };
+  const m = str.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
+  if (m) return { name: m[1].replace(/\s*[—–]\s*Select a Lift\s*/i, "").trim(), sr: m[2].trim() };
+  return { name: str.replace(/\s*[—–]\s*Select a Lift\s*/i, "").trim(), sr: null };
 }
 
 function advanceDay(cycleIdx, weekNum, dayIdx, completedDays) {
@@ -1019,9 +631,9 @@ function HomeView({ state, setState, setView, setSelectedDay, profileId }) {
                   <div style={{ fontWeight: 600, fontSize: 14, color: isNext ? "#C8D8F8" : "#8BAAD6", letterSpacing: "-0.01em" }}>
                     {day.focus}
                   </div>
-                  {day.mainLift && (
+                  {day.B && (
                     <div style={{ fontSize: 11, color: "#6B9ED8", marginTop: 3 }}>
-                      {day.mainLift.name.replace(" (Select a Lift)","").replace(" Variation","").replace(" (Select a Lift)","").replace(/Variation.*$/, "")}
+                      {parseEx(day.B.type === "main" ? day.B.exercise : day.B.items && day.B.items[0]).name}
                     </div>
                   )}
                 </div>
@@ -1091,7 +703,9 @@ function WorkoutView({ state, setState, setView, selectedDay, profileId }) {
   const day = cycle.days[dayKey];
   const color = DAY_COLOR[dayKey];
   const sr = setsReps(day, weekNum);
-  const [expandedAcc, setExpandedAcc] = useState(null);
+  const [expandedEx, setExpandedEx] = useState(null);
+
+  function toggleEx(key) { setExpandedEx(k => k === key ? null : key); }
 
   function markComplete() {
     const nextDayIdx = DAY_ORDER.indexOf(dayKey) + 1;
@@ -1141,71 +755,90 @@ function WorkoutView({ state, setState, setView, selectedDay, profileId }) {
 
       <div style={{ paddingBottom: 110 }}>
 
-        {/* ── Main Lift + Logger ── */}
-        {day.mainLift && (
-          <div>
-            <SectionLabel>Main Lift</SectionLabel>
-            <div style={{ margin: "0 20px", padding: "14px 16px 12px", borderRadius: 8, background: color + "12", border: `1px solid ${color}30` }}>
-              <div style={{ fontWeight: 700, fontSize: 16, color: "#C8D8F8", marginBottom: 2, letterSpacing: "-0.01em" }}>
-                {day.mainLift.name}
-              </div>
-              <div style={{ fontWeight: 900, fontSize: 26, color, letterSpacing: "-0.02em", marginBottom: day.mainLift.options ? 10 : 0 }}>
-                {sr}
-              </div>
-              {day.mainLift.options && (
-                <div>
-                  <div style={{ fontSize: 9, color: "#7AAAE8", fontWeight: 700, letterSpacing: "0.1em", marginBottom: 6 }}>OPTIONS</div>
-                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                    {day.mainLift.options.map((o, i) => (
-                      <span key={i} style={{ fontSize: 10, fontWeight: 500, padding: "3px 9px", borderRadius: 3, background: "#0D1A2E", color: "#7AAAE8", border: "1px solid #1A3050" }}>
-                        {o}
-                      </span>
-                    ))}
+        {/* ── Helper: render a tappable exercise row with optional ExerciseLogger ── */}
+        {(() => {
+          function ExRow({ ex, sectionKey, i }) {
+            const key = `${sectionKey}-${i}`;
+            const isOpen = expandedEx === key;
+            const { name, sr: exSr } = parseEx(ex);
+            return (
+              <div key={key}>
+                <div className="tappable" onClick={() => toggleEx(key)}
+                  style={{ padding: "12px 20px", borderBottom: isOpen ? "none" : "1px solid #1A2D45",
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    background: isOpen ? color + "08" : "transparent" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, color: "#C8D8F8", fontWeight: 600 }}>{name}</div>
+                    {exSr && <div style={{ fontSize: 11, color, fontWeight: 700, marginTop: 2 }}>{exSr}</div>}
                   </div>
+                  <span style={{ color: "#5B8BD4", fontSize: 11, marginLeft: 12, flexShrink: 0 }}>{isOpen ? "▲" : "▼"}</span>
                 </div>
-              )}
-            </div>
-            <ExerciseLogger exerciseName={day.mainLift.name} setsRepsStr={sr} color={color} cycleLabel={cycle.label} weekNum={weekNum} profileId={profileId} />
-          </div>
-        )}
-
-        {/* ── Activation Circuit ── */}
-        {day.activation && day.activation.length > 0 && (
-          <div>
-            <SectionLabel>Activation Circuit</SectionLabel>
-            {day.activation.map((ex, i) => (
-              <div key={i} style={{ padding: "12px 20px", borderBottom: "1px solid #1A2D45" }}>
-                <div style={{ fontSize: 13, color: "#9DBDE8", fontWeight: 500 }}>{ex}</div>
+                {isOpen && <ExerciseLogger exerciseName={name} setsRepsStr={exSr} color={color} cycleLabel={cycle.label} weekNum={weekNum} profileId={profileId} />}
               </div>
-            ))}
-          </div>
-        )}
+            );
+          }
 
-        {/* ── Accessories + Logger ── */}
-        {day.accessories && day.accessories.length > 0 && (
-          <div>
-            <SectionLabel>Accessories</SectionLabel>
-            {day.accessories.map((ex, i) => {
-              const isOpen = expandedAcc === i;
-              const srMatch = ex.match(/(\d+\s*[×x]\s*[\d\-–]+)/);
-              const exName = ex.split(/[—–(]/)[0].trim();
-              const exSr   = srMatch ? srMatch[0] : null;
-              return (
-                <div key={i}>
-                  <div className="tappable" onClick={() => setExpandedAcc(isOpen ? null : i)}
-                    style={{ padding: "12px 20px", borderBottom: isOpen ? "none" : "1px solid #1A2D45", display: "flex", alignItems: "center", justifyContent: "space-between", background: isOpen ? color + "08" : "transparent" }}>
-                    <div>
-                      <div style={{ fontSize: 13, color: "#C8D8F8", fontWeight: 600 }}>{exName}</div>
-                      <div style={{ fontSize: 11, color: exSr ? color : "#6B9ED8", fontWeight: exSr ? 700 : 400, marginTop: 2 }}>
-                        {exSr || ex.replace(exName, "").replace(/^[\s—–]+/, "")}
+          const sections = [
+            { key: "A", label: "A — Warm-Up / Activation", items: day.A || [], type: "list" },
+            { key: "B", label: "B — Main Lift", bData: day.B },
+            { key: "C", label: "C — Accessories", items: day.C || [], type: "list" },
+          ];
+
+          return sections.map(sec => {
+            if (sec.key === "B") {
+              const B = sec.bData;
+              if (!B) return null;
+              if (B.type === "main") {
+                const { name } = parseEx(B.exercise);
+                return (
+                  <div key="B">
+                    <SectionLabel>{sec.label}</SectionLabel>
+                    <div style={{ margin: "0 20px 2px", padding: "14px 16px 14px", borderRadius: 8, background: color + "12", border: `1px solid ${color}30` }}>
+                      <div style={{ fontWeight: 700, fontSize: 15, color: "#C8D8F8", marginBottom: 4, letterSpacing: "-0.01em" }}>
+                        {name}
                       </div>
+                      {sr && (
+                        <div style={{ fontWeight: 900, fontSize: 24, color, letterSpacing: "-0.02em" }}>{sr}</div>
+                      )}
+                      {!sr && B.exercise && (
+                        <div style={{ fontSize: 12, color: "#7AAAE8", fontWeight: 500, marginTop: 2 }}>
+                          {B.exercise.replace(name, "").replace(/^\s*[—–(]\s*/, "").replace(/\)\s*$/, "").trim() || "See progression"}
+                        </div>
+                      )}
                     </div>
-                    <span style={{ color: "#5B8BD4", fontSize: 11, marginLeft: 12 }}>{isOpen ? "▲" : "▼"}</span>
+                    <ExerciseLogger exerciseName={name} setsRepsStr={sr} color={color} cycleLabel={cycle.label} weekNum={weekNum} profileId={profileId} />
                   </div>
-                  {isOpen && <ExerciseLogger exerciseName={exName} setsRepsStr={exSr} color={color} cycleLabel={cycle.label} weekNum={weekNum} profileId={profileId} />}
-                </div>
-              );
-            })}
+                );
+              } else {
+                // B is a list of exercises
+                const items = B.items || [];
+                if (!items.length) return null;
+                return (
+                  <div key="B">
+                    <SectionLabel>{sec.label}</SectionLabel>
+                    {items.map((ex, i) => <ExRow key={i} ex={ex} sectionKey="B" i={i} />)}
+                  </div>
+                );
+              }
+            }
+            // Section A or C
+            if (!sec.items.length) return null;
+            return (
+              <div key={sec.key}>
+                <SectionLabel>{sec.label}</SectionLabel>
+                {sec.items.map((ex, i) => <ExRow key={i} ex={ex} sectionKey={sec.key} i={i} />)}
+              </div>
+            );
+          });
+        })()}
+
+        {/* Optional finisher */}
+        {day.finisher && (
+          <div style={{ margin: "16px 20px 0", padding: "12px 14px", borderRadius: 6, background: "#0D1A2E", border: "1px solid #1A3050" }}>
+            <div style={{ fontSize: 9, color: "#7AAAE8", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 6 }}>
+              Optional Finisher
+            </div>
+            <div style={{ fontSize: 12, color: "#9DBDE8", fontWeight: 500, lineHeight: 1.5 }}>{day.finisher}</div>
           </div>
         )}
       </div>
@@ -1236,7 +869,7 @@ function ProgramView({ state, setState, setView, setSelectedDay, profileId }) {
         Full Program
       </div>
       <div style={{ fontSize: 10, color: "#1E3A6E", fontWeight: 600, letterSpacing: "0.1em", marginBottom: 24, textTransform: "uppercase" }}>
-        8 Cycles · 4 Days/Week · Mon / Tue / Thu / Fri
+        18 Cycles · 4 Days/Week · Mon / Tue / Thu / Fri
       </div>
 
       {PROGRAM.map((cycle, ci) => {
@@ -1303,7 +936,7 @@ function ProgramView({ state, setState, setView, setSelectedDay, profileId }) {
 
 // ─── App ─────────────────────────────────────────────────────────────────────
 function App() {
-  const defaultState = { cycleIdx: 0, weekNum: 1, dayIdx: 0 }; // Cycle 1, Week 1
+  const defaultState = { cycleIdx: 17, weekNum: 1, dayIdx: 0 }; // Cycle 8 (Feb–Mar 2026, current)
   const [activeProfile, setActiveProfileState] = useState(() => store.get("fitlog_active_profile") || "AW");
   const [state, setState] = useState(null);
   const [view, setView] = useState("home");
