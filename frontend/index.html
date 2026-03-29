@@ -48,6 +48,13 @@ const DAY_COLOR = {
 const DAY_ORDER = ["monday","tuesday","thursday","friday"];
 const DAY_LABEL = { monday:"MON", tuesday:"TUE", thursday:"THU", friday:"FRI" };
 
+// ─── Profiles ────────────────────────────────────────────────────────────────
+const PROFILES = {
+  AW: { id: "AW", initials: "AW", first: "AMOLW",   full: "AMOLW TRAINING",   subtitle: "Personal Tracker", grad: ["#2563EB","#4F46E5"] },
+  SV: { id: "SV", initials: "SV", first: "SHELLYV", full: "SHELLYV TRAINING", subtitle: "Personal Tracker", grad: ["#0891B2","#0E7490"] },
+};
+const PROFILE_ORDER = ["AW","SV"];
+
 // ─── Full program data ────────────────────────────────────────────────────────
 const PROGRAM = [
   {
@@ -562,6 +569,12 @@ const store = {
   set: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
   del: k => localStorage.removeItem(k),
 };
+// Profile-scoped storage
+const pStore = {
+  get: (pid, k) => store.get(`fitlog_${pid}_${k}`),
+  set: (pid, k, v) => store.set(`fitlog_${pid}_${k}`, v),
+  del: (pid, k) => store.del(`fitlog_${pid}_${k}`),
+};
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function setsReps(day, weekNum) {
@@ -637,21 +650,21 @@ function getStartingWeight(name) {
   return { weight: 45, tip: "adjust based on feel" };
 }
 
-function allLogs() { return store.get("fitlog_logs") || {}; }
+function allLogs(pid) { return pStore.get(pid, "logs") || {}; }
 
-function getLastLog(exerciseName) {
-  const entries = allLogs()[exerciseName];
+function getLastLog(exerciseName, pid) {
+  const entries = allLogs(pid)[exerciseName];
   return entries && entries.length > 0 ? entries[entries.length - 1] : null;
 }
 
-function saveLog(exerciseName, sets, cycleLabel, weekNum) {
-  const logs = allLogs();
+function saveLog(exerciseName, sets, cycleLabel, weekNum, pid) {
+  const logs = allLogs(pid);
   if (!logs[exerciseName]) logs[exerciseName] = [];
   logs[exerciseName].push({
     date: new Date().toISOString().split("T")[0],
     cycleLabel, weekNum, sets,
   });
-  store.set("fitlog_logs", logs);
+  pStore.set(pid, "logs", logs);
 }
 
 function getSuggested(exerciseName, lastLog) {
@@ -687,8 +700,8 @@ function daysAgoStr(isoDate) {
   } catch { return isoDate; }
 }
 
-function ExerciseLogger({ exerciseName, setsRepsStr, color, cycleLabel, weekNum }) {
-  const lastLog  = getLastLog(exerciseName);
+function ExerciseLogger({ exerciseName, setsRepsStr, color, cycleLabel, weekNum, profileId }) {
+  const lastLog  = getLastLog(exerciseName, profileId);
   const suggestion = getSuggested(exerciseName, lastLog);
   const n = parseSetsCount(setsRepsStr);
   const [sets, setSets] = useState(() =>
@@ -701,7 +714,7 @@ function ExerciseLogger({ exerciseName, setsRepsStr, color, cycleLabel, weekNum 
   function handleSave() {
     const filled = sets.filter(s => s.weight !== "" || s.reps !== "");
     if (filled.length === 0) return;
-    saveLog(exerciseName, filled, cycleLabel, weekNum);
+    saveLog(exerciseName, filled, cycleLabel, weekNum, profileId);
     setSaved(true);
   }
 
@@ -775,49 +788,107 @@ function ExerciseLogger({ exerciseName, setsRepsStr, color, cycleLabel, weekNum 
 
 // ─── Components ──────────────────────────────────────────────────────────────
 
-function Header({ view, setView }) {
+function ProfileMonogram({ profile, size = 34 }) {
+  const gid = `grad_${profile.id}`;
   return (
-    <div style={{
-      borderBottom: "1px solid #1A2D45", padding: "14px 20px",
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      position: "sticky", top: 0, zIndex: 10,
-      background: "rgba(6,9,18,0.96)", backdropFilter: "blur(8px)"
-    }}>
-      {/* Logo */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="34" height="34" rx="8" fill="url(#logoGrad)"/>
-          <text x="17" y="23" textAnchor="middle" fontFamily="Inter, Helvetica Neue, sans-serif" fontWeight="900" fontSize="14" letterSpacing="-0.5" fill="white">AW</text>
-          <defs>
-            <linearGradient id="logoGrad" x1="0" y1="0" x2="34" y2="34" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#2563EB"/>
-              <stop offset="100%" stopColor="#4F46E5"/>
-            </linearGradient>
-          </defs>
-        </svg>
-        <div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
-            <span style={{ fontWeight: 900, fontSize: 15, letterSpacing: "0.04em", color: "#E8F0FE", textTransform: "uppercase" }}>AMOLW</span>
-            <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: "0.08em", color: "#3B82F6", textTransform: "uppercase" }}>TRAINING</span>
+    <svg width={size} height={size} viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="34" height="34" rx="8" fill={`url(#${gid})`}/>
+      <text x="17" y="23" textAnchor="middle" fontFamily="Inter, Helvetica Neue, sans-serif" fontWeight="900" fontSize="13" letterSpacing="-0.5" fill="white">{profile.initials}</text>
+      <defs>
+        <linearGradient id={gid} x1="0" y1="0" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor={profile.grad[0]}/>
+          <stop offset="100%" stopColor={profile.grad[1]}/>
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
+function Header({ view, setView, activeProfile, setActiveProfile }) {
+  const [switcherOpen, setSwitcherOpen] = useState(false);
+  const profile = PROFILES[activeProfile];
+
+  return (
+    <>
+      <div style={{
+        borderBottom: "1px solid #1A2D45", padding: "14px 20px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        position: "sticky", top: 0, zIndex: 10,
+        background: "rgba(6,9,18,0.96)", backdropFilter: "blur(8px)"
+      }}>
+        {/* Logo — tapping opens switcher */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", userSelect: "none" }}
+          onClick={() => setSwitcherOpen(true)}>
+          <ProfileMonogram profile={profile} />
+          <div>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
+              <span style={{ fontWeight: 900, fontSize: 15, letterSpacing: "0.04em", color: "#E8F0FE", textTransform: "uppercase" }}>{profile.first}</span>
+              <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: "0.08em", color: profile.grad[0], textTransform: "uppercase" }}>TRAINING</span>
+            </div>
+            <div style={{ fontSize: 9, color: "#5B8BD4", letterSpacing: "0.14em", marginTop: 1, fontWeight: 600, textTransform: "uppercase" }}>
+              {profile.subtitle}
+            </div>
           </div>
-          <div style={{ fontSize: 9, color: "#5B8BD4", letterSpacing: "0.14em", marginTop: 1, fontWeight: 600, textTransform: "uppercase" }}>
-            Personal Tracker
-          </div>
+          <span style={{ fontSize: 10, color: "#1A3050", marginLeft: 2 }}>▾</span>
+        </div>
+
+        <div style={{ display: "flex", gap: 2 }}>
+          {["home","program"].map(t => (
+            <button key={t} className="tab-btn" onClick={() => setView(t)} style={{
+              padding: "6px 14px", fontSize: 11, fontWeight: 600,
+              letterSpacing: "0.06em", textTransform: "uppercase",
+              color: view === t ? "#3B82F6" : "#5B8BD4",
+              borderBottom: view === t ? "2px solid #3B82F6" : "2px solid transparent",
+            }}>
+              {t}
+            </button>
+          ))}
         </div>
       </div>
-      <div style={{ display: "flex", gap: 2 }}>
-        {["home","program"].map(t => (
-          <button key={t} className="tab-btn" onClick={() => setView(t)} style={{
-            padding: "6px 14px", fontSize: 11, fontWeight: 600,
-            letterSpacing: "0.06em", textTransform: "uppercase",
-            color: view === t ? "#3B82F6" : "#5B8BD4",
-            borderBottom: view === t ? "2px solid #3B82F6" : "2px solid transparent",
+
+      {/* Profile switcher overlay */}
+      {switcherOpen && (
+        <div onClick={() => setSwitcherOpen(false)} style={{
+          position: "fixed", inset: 0, zIndex: 50,
+          background: "rgba(0,0,0,0.75)", display: "flex",
+          alignItems: "flex-start", justifyContent: "center", paddingTop: 68,
+        }}>
+          <div onClick={e => e.stopPropagation()} style={{
+            background: "#0D1A2E", border: "1px solid #1A3050", borderRadius: 14,
+            padding: "20px 20px 16px", width: "calc(100% - 40px)", maxWidth: 360,
           }}>
-            {t}
-          </button>
-        ))}
-      </div>
-    </div>
+            <div style={{ fontSize: 10, color: "#7AAAE8", fontWeight: 700, letterSpacing: "0.14em", marginBottom: 14, textTransform: "uppercase" }}>
+              Switch Profile
+            </div>
+            <div style={{ display: "flex", gap: 12 }}>
+              {PROFILE_ORDER.map(pid => {
+                const p = PROFILES[pid];
+                const isActive = pid === activeProfile;
+                return (
+                  <div key={pid} onClick={() => { setActiveProfile(pid); setSwitcherOpen(false); }}
+                    style={{
+                      flex: 1, borderRadius: 10, padding: "16px 12px 14px",
+                      border: isActive ? `2px solid ${p.grad[0]}` : "2px solid #1A3050",
+                      background: isActive ? p.grad[0] + "18" : "#060912",
+                      cursor: "pointer", textAlign: "center", transition: "all 0.15s",
+                    }}>
+                    <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}>
+                      <ProfileMonogram profile={p} size={44} />
+                    </div>
+                    <div style={{ fontWeight: 800, fontSize: 13, color: "#E8F0FE", letterSpacing: "0.04em" }}>{p.first}</div>
+                    <div style={{ fontWeight: 600, fontSize: 11, color: p.grad[0], letterSpacing: "0.06em", marginBottom: 8 }}>TRAINING</div>
+                    {isActive
+                      ? <span style={{ fontSize: 9, color: p.grad[0], fontWeight: 700, letterSpacing: "0.1em", border: `1px solid ${p.grad[0]}44`, padding: "2px 8px", borderRadius: 3 }}>✓ ACTIVE</span>
+                      : <span style={{ fontSize: 9, color: "#3D5A7A", fontWeight: 600, letterSpacing: "0.1em" }}>TAP TO SWITCH</span>
+                    }
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -833,7 +904,7 @@ function CycleTag({ cycle }) {
   );
 }
 
-function HomeView({ state, setState, setView, setSelectedDay }) {
+function HomeView({ state, setState, setView, setSelectedDay, profileId }) {
   const { cycleIdx, weekNum, dayIdx } = state;
   const cycle = PROGRAM[cycleIdx];
 
@@ -845,7 +916,7 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
   function selectCycle(ci) {
     const next = { cycleIdx: ci, weekNum: 1, dayIdx: 0 };
     setState(next);
-    store.set("fitlog_state", next);
+    pStore.set(profileId, "state", next);
   }
 
   return (
@@ -977,7 +1048,7 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
             const prev = weekNum > 1 ? { ...state, weekNum: weekNum - 1 }
               : cycleIdx > 0 ? { cycleIdx: cycleIdx - 1, weekNum: PROGRAM[cycleIdx-1].weeks, dayIdx: 0 }
               : state;
-            setState(prev); store.set("fitlog_state", prev);
+            setState(prev); pStore.set(profileId, "state", prev);
           }} style={{
             background: "#142038", color: "#3B82F6", fontSize: 11, fontWeight: 600,
             padding: "8px 14px", borderRadius: 5, letterSpacing: "0.04em"
@@ -991,7 +1062,7 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
               : cycleIdx < PROGRAM.length - 1
               ? { cycleIdx: cycleIdx + 1, weekNum: 1, dayIdx: 0 }
               : state;
-            setState(next); store.set("fitlog_state", next);
+            setState(next); pStore.set(profileId, "state", next);
           }} style={{
             background: "#142038", color: "#3B82F6", fontSize: 11, fontWeight: 600,
             padding: "8px 14px", borderRadius: 5, letterSpacing: "0.04em"
@@ -1000,7 +1071,7 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
           </button>
           <button className="btn" onClick={() => {
             const s = { cycleIdx: 7, weekNum: 5, dayIdx: 0 };
-            setState(s); store.set("fitlog_state", s);
+            setState(s); pStore.set(profileId, "state", s);
           }} style={{
             background: "#142038", color: "#5B8BD4", fontSize: 11, fontWeight: 500,
             padding: "8px 14px", borderRadius: 5, letterSpacing: "0.04em"
@@ -1013,7 +1084,7 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
   );
 }
 
-function WorkoutView({ state, setState, setView, selectedDay }) {
+function WorkoutView({ state, setState, setView, selectedDay, profileId }) {
   const { cycleIdx, weekNum, dayIdx } = state;
   const cycle = PROGRAM[cycleIdx];
   const dayKey = selectedDay || DAY_ORDER[dayIdx];
@@ -1037,7 +1108,7 @@ function WorkoutView({ state, setState, setView, selectedDay }) {
       }
     }
     setState(next);
-    store.set("fitlog_state", next);
+    pStore.set(profileId, "state", next);
     setView("home");
   }
 
@@ -1094,7 +1165,7 @@ function WorkoutView({ state, setState, setView, selectedDay }) {
                 </div>
               )}
             </div>
-            <ExerciseLogger exerciseName={day.mainLift.name} setsRepsStr={sr} color={color} cycleLabel={cycle.label} weekNum={weekNum} />
+            <ExerciseLogger exerciseName={day.mainLift.name} setsRepsStr={sr} color={color} cycleLabel={cycle.label} weekNum={weekNum} profileId={profileId} />
           </div>
         )}
 
@@ -1131,7 +1202,7 @@ function WorkoutView({ state, setState, setView, selectedDay }) {
                     </div>
                     <span style={{ color: "#5B8BD4", fontSize: 11, marginLeft: 12 }}>{isOpen ? "▲" : "▼"}</span>
                   </div>
-                  {isOpen && <ExerciseLogger exerciseName={exName} setsRepsStr={exSr} color={color} cycleLabel={cycle.label} weekNum={weekNum} />}
+                  {isOpen && <ExerciseLogger exerciseName={exName} setsRepsStr={exSr} color={color} cycleLabel={cycle.label} weekNum={weekNum} profileId={profileId} />}
                 </div>
               );
             })}
@@ -1158,7 +1229,7 @@ function WorkoutView({ state, setState, setView, selectedDay }) {
   );
 }
 
-function ProgramView({ state, setState, setView, setSelectedDay }) {
+function ProgramView({ state, setState, setView, setSelectedDay, profileId }) {
   return (
     <div style={{ padding: "24px 20px", maxWidth: 600, margin: "0 auto" }}>
       <div style={{ fontWeight: 800, fontSize: 20, color: "#E8F0FE", letterSpacing: "-0.02em", marginBottom: 4 }}>
@@ -1203,8 +1274,9 @@ function ProgramView({ state, setState, setView, setSelectedDay }) {
                 const isActiveDay = active && DAY_ORDER.indexOf(dayKey) === state.dayIdx;
                 return (
                   <div key={dayKey} className="tappable" onClick={() => {
-                    setState({ cycleIdx: ci, weekNum: active ? state.weekNum : 1, dayIdx: DAY_ORDER.indexOf(dayKey) });
-                    store.set("fitlog_state", { cycleIdx: ci, weekNum: active ? state.weekNum : 1, dayIdx: DAY_ORDER.indexOf(dayKey) });
+                    const ns = { cycleIdx: ci, weekNum: active ? state.weekNum : 1, dayIdx: DAY_ORDER.indexOf(dayKey) };
+                    setState(ns);
+                    pStore.set(profileId, "state", ns);
                     setSelectedDay(dayKey);
                     setView("workout");
                   }} style={{
@@ -1232,14 +1304,25 @@ function ProgramView({ state, setState, setView, setSelectedDay }) {
 // ─── App ─────────────────────────────────────────────────────────────────────
 function App() {
   const defaultState = { cycleIdx: 0, weekNum: 1, dayIdx: 0 }; // Cycle 1, Week 1
+  const [activeProfile, setActiveProfileState] = useState(() => store.get("fitlog_active_profile") || "AW");
   const [state, setState] = useState(null);
   const [view, setView] = useState("home");
   const [selectedDay, setSelectedDay] = useState(null);
 
+  // Load workout state whenever the active profile changes
   useEffect(() => {
-    const saved = store.get("fitlog_state");
+    const saved = pStore.get(activeProfile, "state");
     setState(saved || defaultState);
-  }, []);
+  }, [activeProfile]);
+
+  function setActiveProfile(pid) {
+    store.set("fitlog_active_profile", pid);
+    setActiveProfileState(pid);
+    setView("home");
+    setSelectedDay(null);
+    // state will reload via the useEffect above
+    setState(null);
+  }
 
   if (!state) return (
     <div style={{
@@ -1253,15 +1336,15 @@ function App() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#060912", color: "#E8F0FE", overflowX: "hidden" }}>
-      <Header view={view} setView={setView} />
+      <Header view={view} setView={setView} activeProfile={activeProfile} setActiveProfile={setActiveProfile} />
       {view === "home" && (
-        <HomeView state={state} setState={setState} setView={setView} setSelectedDay={setSelectedDay} />
+        <HomeView state={state} setState={setState} setView={setView} setSelectedDay={setSelectedDay} profileId={activeProfile} />
       )}
       {view === "workout" && (
-        <WorkoutView state={state} setState={setState} setView={setView} selectedDay={selectedDay} />
+        <WorkoutView state={state} setState={setState} setView={setView} selectedDay={selectedDay} profileId={activeProfile} />
       )}
       {view === "program" && (
-        <ProgramView state={state} setState={setState} setView={setView} setSelectedDay={setSelectedDay} />
+        <ProgramView state={state} setState={setState} setView={setView} setSelectedDay={setSelectedDay} profileId={activeProfile} />
       )}
     </div>
   );
