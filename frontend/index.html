@@ -166,6 +166,9 @@ const PROGRAM = [
     friday:{focus:"Upper \u2014 Lat Pull / OHP / Triceps / Curls (FIXED across all weeks)",A:["Cable Lat Pull-Downs (4 x 8)", "Incline DB Lateral Raises (4 x 12)"],B:{type:"exercises",items:["Seated DB OHP (4 x 8)", "DB Hammer Curls (4 x 12)"]},C:["DB Skullcrushers (3 x 10)", "Close Grip DB Bench Press (3 x 12-15)", "Cable Curls Facing Away (3 x 15)"]}
   }},
 ];
+// Reverse so most recent cycle is Cycle 1, oldest is Cycle 18
+PROGRAM.reverse();
+PROGRAM.forEach((c, i) => { c.label = "Cycle " + (i + 1); });
 
 // ─── Storage ─────────────────────────────────────────────────────────────────
 const store = {
@@ -554,7 +557,7 @@ function HomeView({ state, setState, setView, setSelectedDay, profileId }) {
         >
           {PROGRAM.map((c, i) => (
             <option key={i} value={i} style={{ background: "#0D1A2E" }}>
-              {c.label} — {c.name} ({c.dates})
+              {c.label} — {c.name}
             </option>
           ))}
         </select>
@@ -902,7 +905,6 @@ function ProgramView({ state, setState, setView, setSelectedDay, profileId }) {
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                   <CycleTag cycle={cycle} />
-                  <span style={{ fontSize: 10, color: "#6B9ED8", fontWeight: 500 }}>{cycle.dates}</span>
                   {active && <span style={{ fontSize: 9, color: "#2563EB", fontWeight: 700 }}>← CURRENT</span>}
                 </div>
                 <div style={{ fontWeight: 700, fontSize: 14, color: active ? "#C8D8F8" : "#8BAAD6", letterSpacing: "-0.01em" }}>
@@ -952,7 +954,7 @@ function ProgramView({ state, setState, setView, setSelectedDay, profileId }) {
 
 // ─── App ─────────────────────────────────────────────────────────────────────
 function App() {
-  const defaultState = { cycleIdx: 17, weekNum: 1, dayIdx: 0 }; // Cycle 8 (Feb–Mar 2026, current)
+  const defaultState = { cycleIdx: 0, weekNum: 1, dayIdx: 0 }; // Cycle 1 (most recent)
   const [activeProfile, setActiveProfileState] = useState(() => store.get("fitlog_active_profile") || "AW");
   const [state, setState] = useState(null);
   const [view, setView] = useState("home");
