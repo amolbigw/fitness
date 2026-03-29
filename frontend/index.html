@@ -168,7 +168,10 @@ const PROGRAM = [
 ];
 // Reverse so most recent cycle is Cycle 1, oldest is Cycle 18
 PROGRAM.reverse();
-PROGRAM.forEach((c, i) => { c.label = "Cycle " + (i + 1); });
+PROGRAM.forEach((c, i) => {
+  c.label = "Cycle " + (i + 1);
+  c.name = c.name.replace(/^.+?\u2014\s*/, ""); // strip "Month Year — " prefix
+});
 
 // ─── Storage ─────────────────────────────────────────────────────────────────
 const store = {
