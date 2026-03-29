@@ -584,14 +584,14 @@ function advanceDay(cycleIdx, weekNum, dayIdx, completedDays) {
 function Header({ view, setView }) {
   return (
     <div style={{
-      borderBottom: "1px solid #0C1424", padding: "14px 20px",
+      borderBottom: "1px solid #1A2D45", padding: "14px 20px",
       display: "flex", alignItems: "center", justifyContent: "space-between",
       position: "sticky", top: 0, zIndex: 10,
       background: "rgba(6,9,18,0.96)", backdropFilter: "blur(8px)"
     }}>
       <div>
         <div style={{ fontWeight: 800, fontSize: 17, letterSpacing: "-0.02em", color: "#E8F0FE" }}>FitLog</div>
-        <div style={{ fontSize: 9, color: "#1E3A6E", letterSpacing: "0.12em", marginTop: 1, fontWeight: 600, textTransform: "uppercase" }}>
+        <div style={{ fontSize: 9, color: "#5B8BD4", letterSpacing: "0.12em", marginTop: 1, fontWeight: 600, textTransform: "uppercase" }}>
           Amol — TeamBuildr
         </div>
       </div>
@@ -600,7 +600,7 @@ function Header({ view, setView }) {
           <button key={t} className="tab-btn" onClick={() => setView(t)} style={{
             padding: "6px 14px", fontSize: 11, fontWeight: 600,
             letterSpacing: "0.06em", textTransform: "uppercase",
-            color: view === t ? "#3B82F6" : "#1E3A6E",
+            color: view === t ? "#3B82F6" : "#5B8BD4",
             borderBottom: view === t ? "2px solid #3B82F6" : "2px solid transparent",
           }}>
             {t}
@@ -632,28 +632,60 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
     setView("workout");
   }
 
+  function selectCycle(ci) {
+    const next = { cycleIdx: ci, weekNum: 1, dayIdx: 0 };
+    setState(next);
+    store.set("fitlog_state", next);
+  }
+
   return (
     <div style={{ padding: "24px 20px", maxWidth: 600, margin: "0 auto" }}>
+
+      {/* Cycle selector */}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontSize: 10, color: "#7AAAE8", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>
+          Training Cycle
+        </div>
+        <select
+          value={cycleIdx}
+          onChange={e => selectCycle(parseInt(e.target.value))}
+          style={{
+            width: "100%", padding: "10px 14px", borderRadius: 6,
+            background: "#0D1A2E", color: "#E8F0FE",
+            border: "1px solid #1A3050", fontSize: 13, fontWeight: 500,
+            fontFamily: "inherit", cursor: "pointer", appearance: "none",
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235B8BD4' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
+            backgroundRepeat: "no-repeat", backgroundPosition: "right 14px center",
+            paddingRight: 36
+          }}
+        >
+          {PROGRAM.map((c, i) => (
+            <option key={i} value={i} style={{ background: "#0D1A2E" }}>
+              {c.label} — {c.name} ({c.dates})
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Cycle header */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
           <CycleTag cycle={cycle} />
-          <span style={{ fontSize: 10, color: "#1E3A6E", fontWeight: 600, letterSpacing: "0.1em" }}>
+          <span style={{ fontSize: 10, color: "#7AAAE8", fontWeight: 600, letterSpacing: "0.1em" }}>
             WEEK {weekNum} OF {cycle.weeks}
           </span>
         </div>
         <div style={{ fontWeight: 800, fontSize: 20, color: "#E8F0FE", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
           {cycle.name}
         </div>
-        <div style={{ fontSize: 11, color: "#1E3A6E", marginTop: 6, lineHeight: 1.5, fontWeight: 400 }}>
+        <div style={{ fontSize: 11, color: "#7AAAE8", marginTop: 6, lineHeight: 1.5, fontWeight: 400 }}>
           {cycle.scheme}
         </div>
       </div>
 
       {/* Week progress bar */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ height: 3, background: "#0C1424", borderRadius: 2 }}>
+        <div style={{ height: 3, background: "#1A2D45", borderRadius: 2 }}>
           <div style={{
             height: 3, borderRadius: 2, background: "#2563EB",
             width: `${((weekNum - 1) / cycle.weeks) * 100}%`,
@@ -664,7 +696,7 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
           {Array.from({ length: cycle.weeks }, (_, i) => (
             <div key={i} style={{
               width: 6, height: 6, borderRadius: "50%",
-              background: i < weekNum - 1 ? "#2563EB" : i === weekNum - 1 ? "#3B82F6" : "#0C1424"
+              background: i < weekNum - 1 ? "#2563EB" : i === weekNum - 1 ? "#3B82F6" : "#1A2D45"
             }} />
           ))}
         </div>
@@ -672,7 +704,7 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
 
       {/* This week's 4 days */}
       <div style={{ marginBottom: 10 }}>
-        <div style={{ fontSize: 10, color: "#1E3A6E", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
+        <div style={{ fontSize: 10, color: "#7AAAE8", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
           This Week
         </div>
         {DAY_ORDER.map((dayKey, i) => {
@@ -683,10 +715,10 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
           return (
             <div key={dayKey} className="day-card" onClick={() => selectDay(dayKey)}
               style={{
-                border: isNext ? `1px solid ${color}44` : "1px solid #0C1424",
-                borderLeft: `3px solid ${isNext ? color : "#0C1424"}`,
+                border: isNext ? `1px solid ${color}44` : "1px solid #1A2D45",
+                borderLeft: `3px solid ${isNext ? color : "#1A2D45"}`,
                 padding: "14px 16px", marginBottom: 8, borderRadius: 6,
-                background: isNext ? "#080D19" : "#070C18",
+                background: isNext ? "#0D1A2E" : "#0A1525",
               }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ flex: 1 }}>
@@ -703,11 +735,11 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
                       </span>
                     )}
                   </div>
-                  <div style={{ fontWeight: 600, fontSize: 14, color: isNext ? "#C8D8F8" : "#243558", letterSpacing: "-0.01em" }}>
+                  <div style={{ fontWeight: 600, fontSize: 14, color: isNext ? "#C8D8F8" : "#8BAAD6", letterSpacing: "-0.01em" }}>
                     {day.focus}
                   </div>
                   {day.mainLift && (
-                    <div style={{ fontSize: 11, color: "#1A2E50", marginTop: 3 }}>
+                    <div style={{ fontSize: 11, color: "#6B9ED8", marginTop: 3 }}>
                       {day.mainLift.name.replace(" (Select a Lift)","").replace(" Variation","").replace(" (Select a Lift)","").replace(/Variation.*$/, "")}
                     </div>
                   )}
@@ -715,10 +747,10 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
                 {sr && (
                   <div style={{ textAlign: "right", marginLeft: 12 }}>
                     <div style={{ fontWeight: 800, fontSize: 15, color, letterSpacing: "-0.01em" }}>{sr}</div>
-                    <div style={{ fontSize: 9, color: "#1A2E50", fontWeight: 500, letterSpacing: "0.06em" }}>THIS WEEK</div>
+                    <div style={{ fontSize: 9, color: "#6B9ED8", fontWeight: 500, letterSpacing: "0.06em" }}>THIS WEEK</div>
                   </div>
                 )}
-                <div style={{ marginLeft: 10, color: "#1A2E50", fontSize: 12 }}>→</div>
+                <div style={{ marginLeft: 10, color: "#5B8BD4", fontSize: 12 }}>→</div>
               </div>
             </div>
           );
@@ -726,8 +758,8 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
       </div>
 
       {/* Navigation controls */}
-      <div style={{ borderTop: "1px solid #0C1424", paddingTop: 18, marginTop: 8 }}>
-        <div style={{ fontSize: 10, color: "#1A2E50", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>
+      <div style={{ borderTop: "1px solid #1A2D45", paddingTop: 18, marginTop: 8 }}>
+        <div style={{ fontSize: 10, color: "#7AAAE8", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>
           Navigate
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -737,7 +769,7 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
               : state;
             setState(prev); store.set("fitlog_state", prev);
           }} style={{
-            background: "#0C1424", color: "#3B82F6", fontSize: 11, fontWeight: 600,
+            background: "#142038", color: "#3B82F6", fontSize: 11, fontWeight: 600,
             padding: "8px 14px", borderRadius: 5, letterSpacing: "0.04em"
           }}>
             ← Prev Week
@@ -751,7 +783,7 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
               : state;
             setState(next); store.set("fitlog_state", next);
           }} style={{
-            background: "#0C1424", color: "#3B82F6", fontSize: 11, fontWeight: 600,
+            background: "#142038", color: "#3B82F6", fontSize: 11, fontWeight: 600,
             padding: "8px 14px", borderRadius: 5, letterSpacing: "0.04em"
           }}>
             Next Week →
@@ -760,7 +792,7 @@ function HomeView({ state, setState, setView, setSelectedDay }) {
             const s = { cycleIdx: 7, weekNum: 5, dayIdx: 0 };
             setState(s); store.set("fitlog_state", s);
           }} style={{
-            background: "#0C1424", color: "#1E3A6E", fontSize: 11, fontWeight: 500,
+            background: "#142038", color: "#5B8BD4", fontSize: 11, fontWeight: 500,
             padding: "8px 14px", borderRadius: 5, letterSpacing: "0.04em"
           }}>
             Jump to Current
@@ -831,7 +863,7 @@ function WorkoutView({ state, setState, setView, selectedDay }) {
           <div style={{ marginBottom: 2 }}>
             <div style={{
               padding: "12px 20px 8px",
-              fontSize: 9, color: "#1E3A6E", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase"
+              fontSize: 9, color: "#7AAAE8", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase"
             }}>
               Main Lift
             </div>
@@ -855,7 +887,7 @@ function WorkoutView({ state, setState, setView, selectedDay }) {
                     {day.mainLift.options.map((o, i) => (
                       <span key={i} style={{
                         fontSize: 10, fontWeight: 500, padding: "3px 9px", borderRadius: 3,
-                        background: "#0D1424", color: "#243558", border: "1px solid #0F1929"
+                        background: "#0D1A2E", color: "#7AAAE8", border: "1px solid #1A3050"
                       }}>
                         {o}
                       </span>
@@ -872,17 +904,17 @@ function WorkoutView({ state, setState, setView, selectedDay }) {
           <div>
             <div style={{
               padding: "12px 20px 8px",
-              fontSize: 9, color: "#1E3A6E", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase"
+              fontSize: 9, color: "#7AAAE8", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase"
             }}>
               Activation Circuit
             </div>
             {day.activation.map((ex, i) => (
               <div key={i} className="tappable" style={{
                 padding: "13px 20px",
-                borderBottom: "1px solid #0A1020",
+                borderBottom: "1px solid #1A2D45",
                 background: "transparent"
               }}>
-                <div style={{ fontWeight: 500, fontSize: 13, color: "#7090C0", letterSpacing: "-0.01em" }}>
+                <div style={{ fontWeight: 500, fontSize: 13, color: "#9DBDE8", letterSpacing: "-0.01em" }}>
                   {ex}
                 </div>
               </div>
@@ -895,17 +927,17 @@ function WorkoutView({ state, setState, setView, selectedDay }) {
           <div>
             <div style={{
               padding: "12px 20px 8px",
-              fontSize: 9, color: "#1E3A6E", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase"
+              fontSize: 9, color: "#7AAAE8", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase"
             }}>
               Accessories
             </div>
             {day.accessories.map((ex, i) => (
               <div key={i} className="tappable" style={{
                 padding: "13px 20px",
-                borderBottom: "1px solid #0A1020",
+                borderBottom: "1px solid #1A2D45",
                 background: "transparent"
               }}>
-                <div style={{ fontWeight: 500, fontSize: 13, color: "#7090C0", letterSpacing: "-0.01em" }}>
+                <div style={{ fontWeight: 500, fontSize: 13, color: "#9DBDE8", letterSpacing: "-0.01em" }}>
                   {ex}
                 </div>
               </div>
@@ -947,31 +979,31 @@ function ProgramView({ state, setState, setView, setSelectedDay }) {
         const active = ci === state.cycleIdx;
         return (
           <div key={ci} style={{
-            border: active ? "1px solid #2563EB33" : "1px solid #0C1424",
-            borderLeft: active ? "3px solid #2563EB" : "3px solid #0C1424",
+            border: active ? "1px solid #2563EB55" : "1px solid #1A2D45",
+            borderLeft: active ? "3px solid #2563EB" : "3px solid #1A2D45",
             borderRadius: 6, marginBottom: 10, overflow: "hidden",
-            background: active ? "#080D19" : "#070C18"
+            background: active ? "#0D1A2E" : "#0A1525"
           }}>
             {/* Cycle header */}
             <div style={{ padding: "14px 16px 10px", display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                   <CycleTag cycle={cycle} />
-                  <span style={{ fontSize: 10, color: "#1A2E50", fontWeight: 500 }}>{cycle.dates}</span>
+                  <span style={{ fontSize: 10, color: "#6B9ED8", fontWeight: 500 }}>{cycle.dates}</span>
                   {active && <span style={{ fontSize: 9, color: "#2563EB", fontWeight: 700 }}>← CURRENT</span>}
                 </div>
-                <div style={{ fontWeight: 700, fontSize: 14, color: active ? "#C8D8F8" : "#243558", letterSpacing: "-0.01em" }}>
+                <div style={{ fontWeight: 700, fontSize: 14, color: active ? "#C8D8F8" : "#8BAAD6", letterSpacing: "-0.01em" }}>
                   {cycle.name}
                 </div>
-                <div style={{ fontSize: 11, color: "#1A2E50", marginTop: 4, lineHeight: 1.4 }}>{cycle.scheme}</div>
+                <div style={{ fontSize: 11, color: "#6B9ED8", marginTop: 4, lineHeight: 1.4 }}>{cycle.scheme}</div>
               </div>
-              <div style={{ fontSize: 10, color: "#1A2E50", fontWeight: 600, whiteSpace: "nowrap", marginLeft: 12 }}>
+              <div style={{ fontSize: 10, color: "#6B9ED8", fontWeight: 600, whiteSpace: "nowrap", marginLeft: 12 }}>
                 {cycle.weeks}w
               </div>
             </div>
 
             {/* Days grid */}
-            <div style={{ borderTop: "1px solid #0C1424", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr" }}>
+            <div style={{ borderTop: "1px solid #1A2D45", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr" }}>
               {DAY_ORDER.map(dayKey => {
                 const day = cycle.days[dayKey];
                 const color = DAY_COLOR[dayKey];
@@ -987,10 +1019,10 @@ function ProgramView({ state, setState, setView, setSelectedDay }) {
                     borderRight: dayKey !== "friday" ? "1px solid #0A1020" : "none",
                     background: isActiveDay ? color + "18" : "transparent"
                   }}>
-                    <div style={{ fontSize: 9, fontWeight: 700, color: isActiveDay ? color : "#1A2E50", letterSpacing: "0.08em", marginBottom: 3 }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: isActiveDay ? color : "#6B9ED8", letterSpacing: "0.08em", marginBottom: 3 }}>
                       {DAY_LABEL[dayKey]}
                     </div>
-                    <div style={{ fontSize: 10, color: "#243558", fontWeight: 500, lineHeight: 1.3 }}>
+                    <div style={{ fontSize: 10, color: "#8BAAD6", fontWeight: 500, lineHeight: 1.3 }}>
                       {day.focus.split(" — ")[1] || day.focus}
                     </div>
                   </div>
@@ -1006,7 +1038,7 @@ function ProgramView({ state, setState, setView, setSelectedDay }) {
 
 // ─── App ─────────────────────────────────────────────────────────────────────
 function App() {
-  const defaultState = { cycleIdx: 7, weekNum: 5, dayIdx: 0 }; // Cycle 8, Week 5
+  const defaultState = { cycleIdx: 0, weekNum: 1, dayIdx: 0 }; // Cycle 1, Week 1
   const [state, setState] = useState(null);
   const [view, setView] = useState("home");
   const [selectedDay, setSelectedDay] = useState(null);
