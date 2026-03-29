@@ -11,8 +11,9 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; background: #060912; }
+    html, body { height: 100%; background: #060912; overflow-x: hidden; }
     body { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    * { max-width: 100%; }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: #0D1117; }
     ::-webkit-scrollbar-thumb { background: #1E2D4A; border-radius: 2px; }
@@ -705,17 +706,18 @@ function ExerciseLogger({ exerciseName, setsRepsStr, color, cycleLabel, weekNum 
   }
 
   const inputStyle = (c) => ({
-    flex: 1, padding: "8px 6px", borderRadius: 5,
+    flex: 1, minWidth: 0, padding: "8px 4px", borderRadius: 5,
     border: `1px solid ${c}44`, background: "#060F1E",
     color: "#E8F0FE", fontSize: 14, fontWeight: 700,
     fontFamily: "inherit", textAlign: "center",
+    boxSizing: "border-box",
   });
 
   return (
-    <div style={{ padding: "14px 20px 16px", background: color + "0A", borderBottom: `1px solid ${color}1A` }}>
+    <div style={{ padding: "14px 16px 16px", background: color + "0A", borderBottom: `1px solid ${color}1A` }}>
       {/* Suggestion + last time cards */}
-      <div style={{ display: "flex", gap: 10, marginBottom: 14 }}>
-        <div style={{ flex: 1, background: color + "1C", borderRadius: 6, padding: "10px 12px", border: `1px solid ${color}33` }}>
+      <div style={{ display: "flex", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
+        <div style={{ flex: 1, minWidth: "140px", background: color + "1C", borderRadius: 6, padding: "10px 12px", border: `1px solid ${color}33` }}>
           <div style={{ fontSize: 9, fontWeight: 700, color, letterSpacing: "0.1em", marginBottom: 4 }}>
             {suggestion.isDefault ? "SUGGESTED START" : "SUGGESTED"}
           </div>
@@ -724,7 +726,7 @@ function ExerciseLogger({ exerciseName, setsRepsStr, color, cycleLabel, weekNum 
           </div>
           <div style={{ fontSize: 10, color: "#7AAAE8", marginTop: 3, lineHeight: 1.4 }}>{suggestion.tip}</div>
         </div>
-        <div style={{ flex: 1, background: "#0A1525", borderRadius: 6, padding: "10px 12px", border: "1px solid #1A3050" }}>
+        <div style={{ flex: 1, minWidth: "140px", background: "#0A1525", borderRadius: 6, padding: "10px 12px", border: "1px solid #1A3050" }}>
           <div style={{ fontSize: 9, fontWeight: 700, color: "#7AAAE8", letterSpacing: "0.1em", marginBottom: 4 }}>
             {lastLog ? `LAST TIME · ${daysAgoStr(lastLog.date)}` : "LAST TIME"}
           </div>
@@ -747,12 +749,12 @@ function ExerciseLogger({ exerciseName, setsRepsStr, color, cycleLabel, weekNum 
       {/* Set inputs */}
       <div style={{ marginBottom: 12 }}>
         {sets.map((s, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: 10, color: "#5B8BD4", fontWeight: 700, width: 36, flexShrink: 0, letterSpacing: "0.04em" }}>
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8, width: "100%" }}>
+            <span style={{ fontSize: 10, color: "#5B8BD4", fontWeight: 700, width: 24, flexShrink: 0, letterSpacing: "0.02em" }}>
               S{i + 1}
             </span>
             <input type="number" placeholder="lbs" value={s.weight} onChange={e => update(i, "weight", e.target.value)} style={inputStyle(color)} />
-            <span style={{ fontSize: 12, color: "#5B8BD4", flexShrink: 0, fontWeight: 600 }}>×</span>
+            <span style={{ fontSize: 12, color: "#5B8BD4", flexShrink: 0, fontWeight: 600, width: 12, textAlign: "center" }}>×</span>
             <input type="number" placeholder="reps" value={s.reps} onChange={e => update(i, "reps", e.target.value)} style={inputStyle(color)} />
           </div>
         ))}
