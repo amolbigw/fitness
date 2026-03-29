@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitLog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: #060912; }
+    body { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #0D1117; }
+    ::-webkit-scrollbar-thumb { background: #1E2D4A; border-radius: 2px; }
+    .ex-row { transition: background 0.12s; cursor: pointer; }
+    .ex-row:hover { background: rgba(37,99,235,0.06) !important; }
+    .btn-main { transition: filter 0.12s, transform 0.12s; cursor: pointer; }
+    .btn-main:hover { filter: brightness(1.12); transform: translateY(-1px); }
+    .btn-main:active { transform: translateY(0); }
+    .day-card { transition: transform 0.12s, border-color 0.12s; cursor: pointer; }
+    .day-card:hover { transform: translateX(4px); }
+    .tab-btn { cursor: pointer; transition: color 0.12s, border-color 0.12s; background: none; border: none; }
+    a { color: inherit; text-decoration: none; }
+    a:hover { opacity: 0.75; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // ─── Blue palette per day type ───────────────────────────────────────────
+    const BLUE = {
+      PUSH:  "#2563EB",   // vivid blue
+      "PUSH+": "#1D4ED8", // deep blue
+      PULL:  "#0EA5E9",   // sky blue
+      "PULL+": "#0284C7", // darker sky
+      LEGS:  "#6366F1",   // indigo
+      "LEGS+": "#4F46E5", // deeper indigo
+    };
+
+    const WORKOUTS = [
+      {
+        id: 0, label: "DAY 1", name: "Push — Chest, Shoulders, Triceps", tag: "PUSH",
+        exercises: [
+          { name: "Barbell Bench Press", sets: "4", reps: "6–8", focus: "Compound | Primary Chest", cues: "Retract scapula before unracking. Lower bar to lower chest with control (2s). Drive through full ROM. Feet flat, slight arch.", video: "https://www.youtube.com/results?search_query=barbell+bench+press+form+tutorial" },
+          { name: "Incline Dumbbell Press", sets: "3", reps: "10–12", focus: "Upper Chest", cues: "Set bench 30–45°. Control the eccentric. Squeeze at top. Don't let elbows flare past 75°.", video: "https://www.youtube.com/results?search_query=incline+dumbbell+press+technique" },
+          { name: "Overhead Press (Barbell)", sets: "4", reps: "6–8", focus: "Compound | Shoulders", cues: "Brace core, glutes tight. Bar path slightly back over head. Avoid excessive lumbar extension. Lock out fully.", video: "https://www.youtube.com/results?search_query=overhead+press+barbell+form" },
+          { name: "Cable Lateral Raise", sets: "3", reps: "15–20", focus: "Medial Delts", cues: "Use cable for constant tension. Lead with elbow, not wrist. Slight forward lean. No momentum.", video: "https://www.youtube.com/results?search_query=cable+lateral+raise+tutorial" },
+          { name: "Tricep Rope Pushdown", sets: "3", reps: "12–15", focus: "Triceps — Long Head", cues: "Elbows pinned at sides. Spread rope at bottom for full contraction. Controlled return.", video: "https://www.youtube.com/results?search_query=tricep+rope+pushdown+form" },
+          { name: "Overhead Tricep Extension", sets: "3", reps: "10–12", focus: "Triceps — Long Head Stretch", cues: "Keep elbows close. Lower behind head for full stretch. Single cable or EZ bar.", video: "https://www.youtube.com/results?search_query=overhead+tricep+extension+cable" }
+        ]
+      },
+      {
+        id: 1, label: "DAY 2", name: "Pull — Back, Biceps, Rear Delts", tag: "PULL",
+        exercises: [
+          { name: "Weighted Pull-Up", sets: "4", reps: "6–8", focus: "Compound | Lats, Biceps", cues: "Full dead hang. Drive elbows to hips, not behind. Avoid excessive swinging. Add weight once reps are clean.", video: "https://www.youtube.com/results?search_query=weighted+pull+up+form+tutorial" },
+          { name: "Barbell Row", sets: "4", reps: "8–10", focus: "Mid Back, Lats", cues: "Hinge at hips, chest up. Bar to lower chest. Squeeze lats hard at top. 45° torso angle.", video: "https://www.youtube.com/results?search_query=barbell+row+form+tutorial" },
+          { name: "Seated Cable Row", sets: "3", reps: "12–15", focus: "Mid Back, Rhomboids", cues: "Pull to navel. Chest up throughout. Don't round at stretch — keep tension in lats.", video: "https://www.youtube.com/results?search_query=seated+cable+row+form" },
+          { name: "Face Pull", sets: "3", reps: "15–20", focus: "Rear Delts, External Rotation", cues: "Cable at head height. Pull to ears, externally rotate at end. High rep. Don't skip this.", video: "https://www.youtube.com/results?search_query=face+pull+exercise+form" },
+          { name: "Incline Dumbbell Curl", sets: "3", reps: "10–12", focus: "Biceps — Long Head Stretch", cues: "Incline bench 45–60°. Arms hang fully. Supinate at top. Control eccentric.", video: "https://www.youtube.com/results?search_query=incline+dumbbell+curl+technique" },
+          { name: "Hammer Curl", sets: "3", reps: "12–15", focus: "Brachialis, Forearms", cues: "Neutral grip. No body swing. Alternate or simultaneous. Good for arm thickness.", video: "https://www.youtube.com/results?search_query=hammer+curl+proper+form" }
+        ]
+      },
+      {
+        id: 2, label: "DAY 3", name: "Legs — Quads, Hamstrings, Glutes", tag: "LEGS",
+        exercises: [
+          { name: "Barbell Back Squat", sets: "4", reps: "5–7", focus: "Compound | Quads, Glutes", cues: "High or low bar — pick one and be consistent. Knees track toes. Depth at least parallel. Brace hard before descent.", video: "https://www.youtube.com/results?search_query=barbell+back+squat+form+tutorial" },
+          { name: "Romanian Deadlift", sets: "3", reps: "10–12", focus: "Hamstrings, Glutes", cues: "Hip hinge, not a squat. Bar stays close to legs. Feel the hamstring stretch. Slight knee bend.", video: "https://www.youtube.com/results?search_query=romanian+deadlift+form+tutorial" },
+          { name: "Leg Press", sets: "3", reps: "12–15", focus: "Quad Volume", cues: "Feet shoulder-width, slightly high for more glute. Don't lock knees. Control descent. Full ROM.", video: "https://www.youtube.com/results?search_query=leg+press+proper+form" },
+          { name: "Lying Leg Curl", sets: "3", reps: "10–12", focus: "Hamstring Isolation", cues: "Full stretch at top is key for hypertrophy. Slow eccentric. Nordic curl = advanced substitute.", video: "https://www.youtube.com/results?search_query=lying+leg+curl+form+tutorial" },
+          { name: "Leg Extension", sets: "3", reps: "15–20", focus: "Quad Isolation", cues: "Full extension for VMO activation. Squeeze at top. Don't throw weight. Good finisher.", video: "https://www.youtube.com/results?search_query=leg+extension+machine+form" },
+          { name: "Standing Calf Raise", sets: "4", reps: "15–20", focus: "Gastrocnemius", cues: "Full ROM — deep stretch, full rise. Slow. Pause at bottom each rep. Calves respond to volume.", video: "https://www.youtube.com/results?search_query=standing+calf+raise+form" }
+        ]
+      },
+      {
+        id: 3, label: "DAY 4", name: "Push — Strength Focus", tag: "PUSH+",
+        exercises: [
+          { name: "Barbell Bench Press (Heavy)", sets: "5", reps: "4–6", focus: "Strength | Chest", cues: "Work up to a heavy top set. Pause reps optional for control. Full ROM. Spot recommended at top weights.", video: "https://www.youtube.com/results?search_query=bench+press+heavy+strength+tips" },
+          { name: "Dumbbell Shoulder Press", sets: "4", reps: "8–10", focus: "Shoulders, Triceps", cues: "Neutral or pronated grip. Press up and slightly in. Don't hyperextend neck. Control descent.", video: "https://www.youtube.com/results?search_query=dumbbell+shoulder+press+form" },
+          { name: "Cable Chest Fly", sets: "3", reps: "12–15", focus: "Chest — Stretch & Contraction", cues: "Set cables low. Slight forward lean. Feel the stretch. Meet hands at center — don't cross them.", video: "https://www.youtube.com/results?search_query=cable+chest+fly+tutorial" },
+          { name: "Arnold Press", sets: "3", reps: "10–12", focus: "All 3 Delt Heads", cues: "Start with palms facing you, rotate to press up. Keeps the delts under tension longer.", video: "https://www.youtube.com/results?search_query=arnold+press+form+tutorial" },
+          { name: "Close-Grip Bench Press", sets: "3", reps: "10–12", focus: "Triceps, Inner Chest", cues: "Grip inside shoulder width. Elbows tucked. Lower to lower chest. Great tricep builder.", video: "https://www.youtube.com/results?search_query=close+grip+bench+press+form" },
+          { name: "Weighted Dips", sets: "3", reps: "8–10", focus: "Chest, Triceps", cues: "Lean forward for chest focus. Full lockout at top. Control descent. Add weight once 12+ clean reps.", video: "https://www.youtube.com/results?search_query=weighted+dips+form+chest" }
+        ]
+      },
+      {
+        id: 4, label: "DAY 5", name: "Pull — Strength Focus", tag: "PULL+",
+        exercises: [
+          { name: "Conventional Deadlift", sets: "4", reps: "4–6", focus: "Compound | Full Posterior Chain", cues: "Brace before you pull. Bar over mid-foot. Lat spread. Drive floor away. Lock hips at top — don't hyperextend.", video: "https://www.youtube.com/results?search_query=conventional+deadlift+form+tutorial" },
+          { name: "Chest-Supported Row", sets: "4", reps: "10–12", focus: "Mid Back — No Spinal Load", cues: "Chest flat on pad eliminates cheating. Full ROM. Squeeze at end of movement. Great after heavy deadlifts.", video: "https://www.youtube.com/results?search_query=chest+supported+row+tutorial" },
+          { name: "Lat Pulldown", sets: "3", reps: "12–15", focus: "Lats — Width", cues: "Pull to upper chest. Elbows down and back. Lean back slightly. Controlled stretch at top.", video: "https://www.youtube.com/results?search_query=lat+pulldown+form+tutorial" },
+          { name: "Rear Delt Fly", sets: "3", reps: "15–20", focus: "Rear Delts", cues: "Slight bend in elbows. Lead with elbows, not wrists. High volume is fine here.", video: "https://www.youtube.com/results?search_query=rear+delt+fly+cable+form" },
+          { name: "Preacher Curl", sets: "3", reps: "10–12", focus: "Biceps — Short Head", cues: "Full stretch at bottom. Don't let elbow lift off pad. Squeeze at top.", video: "https://www.youtube.com/results?search_query=preacher+curl+form+tutorial" },
+          { name: "Cable Curl (Straight Bar)", sets: "3", reps: "12–15", focus: "Biceps Finisher", cues: "Stand close to stack. Keep elbows pinned. Constant tension throughout. Good pump finisher.", video: "https://www.youtube.com/results?search_query=cable+bicep+curl+form" }
+        ]
+      },
+      {
+        id: 5, label: "DAY 6", name: "Legs — Volume & Isolation", tag: "LEGS+",
+        exercises: [
+          { name: "Front Squat / Hack Squat", sets: "4", reps: "8–10", focus: "Quad-Dominant", cues: "Front squat: elbows high, clean or cross grip. Hack squat: feet forward for quad emphasis. Both are brutal.", video: "https://www.youtube.com/results?search_query=front+squat+form+tutorial" },
+          { name: "Bulgarian Split Squat", sets: "3", reps: "10–12 each", focus: "Quads, Glutes — Unilateral", cues: "Rear foot on bench. Front foot far enough to keep shin vertical. Dumbbells or barbell. Expect humility.", video: "https://www.youtube.com/results?search_query=bulgarian+split+squat+form" },
+          { name: "Stiff-Leg Deadlift", sets: "3", reps: "10–12", focus: "Hamstring Stretch", cues: "Maintain flat back. Bar close to legs. Feel stretch more than RDL. Lighter weight, strict form.", video: "https://www.youtube.com/results?search_query=stiff+leg+deadlift+form" },
+          { name: "Seated Leg Curl", sets: "3", reps: "10–15", focus: "Hamstrings", cues: "Seated curl better for distal hamstring. Full stretch. Slow controlled reps.", video: "https://www.youtube.com/results?search_query=seated+leg+curl+form" },
+          { name: "Walking Lunges", sets: "3", reps: "12–16 steps", focus: "Glutes, Quads — Functional", cues: "Long stride. Knee tracks over toes. Torso upright. Use dumbbells or bodyweight. Great for balance.", video: "https://www.youtube.com/results?search_query=walking+lunges+form+dumbbell" },
+          { name: "Seated Calf Raise", sets: "4", reps: "15–20", focus: "Soleus", cues: "Different muscle from standing calf raise. Seated isolates soleus. Slow, controlled, full ROM.", video: "https://www.youtube.com/results?search_query=seated+calf+raise+form" }
+        ]
+      }
+    ];
+
+    // ─── Storage helpers (localStorage) ─────────────────────────────────────
+    const store = {
+      get: k => localStorage.getItem(k),
+      set: (k, v) => localStorage.setItem(k, v),
+      del: k => localStorage.removeItem(k),
+    };
+
+    // ─── Components ──────────────────────────────────────────────────────────
+
+    function Badge({ tag }) {
+      const color = BLUE[tag] || "#2563EB";
+      return (
+        <span style={{
+          fontFamily: "inherit", fontWeight: 700, fontSize: 10,
+          letterSpacing: "0.1em", padding: "3px 8px",
+          borderRadius: 3, background: color + "22", color,
+          textTransform: "uppercase"
+        }}>{tag}</span>
+      );
+    }
+
+    function Header({ view, setView }) {
+      return (
+        <div style={{
+          borderBottom: "1px solid #0F1929",
+          padding: "14px 24px",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          position: "sticky", top: 0, zIndex: 10,
+          background: "rgba(6,9,18,0.96)", backdropFilter: "blur(8px)"
+        }}>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: 18, letterSpacing: "-0.02em", color: "#E8F0FE" }}>
+              FitLog
+            </div>
+            <div style={{ fontSize: 10, color: "#1E3A6E", letterSpacing: "0.12em", marginTop: 1, fontWeight: 500 }}>
+              6-DAY PPL PROGRAM
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 2 }}>
+            {["home", "plan"].map(tab => (
+              <button key={tab} className="tab-btn" onClick={() => setView(tab)} style={{
+                padding: "6px 16px", fontSize: 11, fontWeight: 600,
+                letterSpacing: "0.08em", textTransform: "uppercase",
+                color: view === tab ? "#3B82F6" : "#1E3A6E",
+                borderBottom: view === tab ? "2px solid #3B82F6" : "2px solid transparent",
+                fontFamily: "inherit"
+              }}>
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function ProgressBar({ currentIndex, color }) {
+      return (
+        <div style={{ height: 2, background: "#0D1117" }}>
+          <div style={{
+            height: 2, width: `${(currentIndex / WORKOUTS.length) * 100}%`,
+            background: color, transition: "width 0.4s ease"
+          }} />
+        </div>
+      );
+    }
+
+    function HomeView({ current, next, currentIndex, completedToday, setView, resetProgress }) {
+      const color = BLUE[current.tag];
+      return (
+        <div style={{ padding: "28px 24px", maxWidth: 600, margin: "0 auto" }}>
+
+          {/* Next workout card */}
+          <div style={{ marginBottom: 28 }}>
+            <div style={{ fontSize: 10, letterSpacing: "0.14em", color: "#1E3A6E", marginBottom: 12, fontWeight: 600, textTransform: "uppercase" }}>
+              Next Workout
+            </div>
+            <div style={{
+              border: `1px solid ${color}28`,
+              borderLeft: `3px solid ${color}`,
+              padding: "22px 20px 18px",
+              background: "#080D19",
+              borderRadius: 6
+            }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16 }}>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                    <Badge tag={current.tag} />
+                    <span style={{ fontSize: 10, color: "#1E3A6E", fontWeight: 500 }}>{current.label} OF 6</span>
+                  </div>
+                  <div style={{ fontWeight: 800, fontSize: 22, letterSpacing: "-0.02em", color: "#E8F0FE", lineHeight: 1.2 }}>
+                    {current.name}
+                  </div>
+                </div>
+                {completedToday && (
+                  <span style={{
+                    fontSize: 10, color: "#22C55E", border: "1px solid #22C55E33",
+                    padding: "4px 10px", borderRadius: 4, fontWeight: 600, whiteSpace: "nowrap"
+                  }}>
+                    ✓ Done today
+                  </span>
+                )}
+              </div>
+
+              {/* Exercise chips */}
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 18 }}>
+                {current.exercises.map((ex, i) => (
+                  <span key={i} style={{
+                    fontSize: 10, color: "#1E3A6E", background: "#0D1424",
+                    padding: "3px 9px", borderRadius: 3, fontWeight: 500
+                  }}>
+                    {ex.name}
+                  </span>
+                ))}
+              </div>
+
+              <button className="btn-main" onClick={() => setView("workout")} style={{
+                width: "100%", background: color, border: "none",
+                color: "#fff", fontFamily: "inherit", fontWeight: 700,
+                fontSize: 13, letterSpacing: "0.06em", padding: "12px 20px",
+                borderRadius: 5, cursor: "pointer"
+              }}>
+                START WORKOUT →
+              </button>
+            </div>
+          </div>
+
+          {/* Up next */}
+          <div style={{ marginBottom: 28 }}>
+            <div style={{ fontSize: 10, letterSpacing: "0.14em", color: "#1E3A6E", marginBottom: 12, fontWeight: 600, textTransform: "uppercase" }}>
+              After That
+            </div>
+            <div style={{
+              border: "1px solid #0F1929", padding: "14px 18px",
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              borderRadius: 6, background: "#070C18"
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <Badge tag={next.tag} />
+                <span style={{ fontSize: 13, color: "#243558", fontWeight: 500 }}>{next.name}</span>
+              </div>
+              <span style={{ fontSize: 10, color: "#111827", fontWeight: 500 }}>{next.label}</span>
+            </div>
+          </div>
+
+          {/* Cycle tracker */}
+          <div style={{ borderTop: "1px solid #0C1424", paddingTop: 22 }}>
+            <div style={{ fontSize: 10, letterSpacing: "0.14em", color: "#1A2E50", marginBottom: 12, fontWeight: 600, textTransform: "uppercase" }}>
+              Week Progress
+            </div>
+            <div style={{ display: "flex", gap: 5 }}>
+              {WORKOUTS.map((w, i) => {
+                const c = BLUE[w.tag];
+                const active = i === currentIndex;
+                const done = i < currentIndex;
+                return (
+                  <div key={i} style={{
+                    flex: 1, height: 30, borderRadius: 4,
+                    background: active ? c : done ? c + "28" : "#0D1424",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 9, fontWeight: 700, letterSpacing: "0.06em",
+                    color: active ? "#fff" : done ? c + "88" : "#1A2E50"
+                  }}>
+                    {w.tag.replace("+", "")}
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ marginTop: 10, textAlign: "right" }}>
+              <button onClick={resetProgress} style={{
+                background: "none", border: "none", fontSize: 10,
+                color: "#1A2E50", cursor: "pointer", letterSpacing: "0.08em",
+                fontFamily: "inherit", fontWeight: 500
+              }}>
+                Reset cycle
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function WorkoutView({ current, next, setView, setExpandedExercise, expandedExercise, markComplete }) {
+      const color = BLUE[current.tag];
+      return (
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <div style={{ padding: "20px 24px 0" }}>
+            <button onClick={() => { setView("home"); setExpandedExercise(null); }} style={{
+              background: "none", border: "none", color: "#1E3A6E",
+              fontSize: 11, letterSpacing: "0.08em", cursor: "pointer",
+              marginBottom: 20, padding: 0, fontFamily: "inherit", fontWeight: 600
+            }}>
+              ← Back
+            </button>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+              <Badge tag={current.tag} />
+              <span style={{ fontSize: 10, color: "#1E3A6E", fontWeight: 500 }}>{current.label} OF 6</span>
+            </div>
+            <div style={{ fontWeight: 800, fontSize: 26, letterSpacing: "-0.02em", color: "#E8F0FE", marginBottom: 24, lineHeight: 1.15 }}>
+              {current.name}
+            </div>
+          </div>
+
+          <div style={{ paddingBottom: 110 }}>
+            {current.exercises.map((ex, i) => (
+              <div key={i}>
+                <div
+                  className="ex-row"
+                  onClick={() => setExpandedExercise(expandedExercise === i ? null : i)}
+                  style={{
+                    padding: "15px 24px",
+                    borderBottom: "1px solid #0C1424",
+                    background: expandedExercise === i ? "#080D19" : "transparent"
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600, fontSize: 15, color: "#C8D8F8", letterSpacing: "-0.01em" }}>
+                        {ex.name}
+                      </div>
+                      <div style={{ fontSize: 11, color: "#1E3A6E", marginTop: 3, fontWeight: 500 }}>{ex.focus}</div>
+                    </div>
+                    <div style={{ textAlign: "right", marginLeft: 16 }}>
+                      <div style={{ fontWeight: 800, fontSize: 17, color, letterSpacing: "-0.01em" }}>
+                        {ex.sets}×{ex.reps}
+                      </div>
+                      <div style={{ fontSize: 9, color: "#1A2E50", letterSpacing: "0.08em", fontWeight: 500 }}>SETS×REPS</div>
+                    </div>
+                    <div style={{ marginLeft: 14, color: "#1A2E50", fontSize: 11 }}>
+                      {expandedExercise === i ? "▲" : "▼"}
+                    </div>
+                  </div>
+                </div>
+
+                {expandedExercise === i && (
+                  <div style={{ padding: "16px 24px 20px", background: "#06091200", borderBottom: "1px solid #0C1424", borderTop: `1px solid ${color}18` }}>
+                    <div style={{
+                      fontSize: 12, color: "#6B8CC4", lineHeight: 1.75, marginBottom: 16,
+                      borderLeft: `2px solid ${color}`, paddingLeft: 14, fontWeight: 400
+                    }}>
+                      {ex.cues}
+                    </div>
+                    <a href={ex.video} target="_blank" rel="noopener noreferrer" style={{
+                      display: "inline-flex", alignItems: "center", gap: 6,
+                      fontSize: 11, letterSpacing: "0.06em", color,
+                      border: `1px solid ${color}33`, padding: "7px 14px",
+                      borderRadius: 4, fontWeight: 600
+                    }}>
+                      ▶ Watch Tutorial
+                    </a>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Fixed CTA */}
+          <div style={{
+            position: "fixed", bottom: 0, left: 0, right: 0,
+            padding: "16px 24px 24px",
+            background: "linear-gradient(to top, #060912 60%, transparent)",
+            maxWidth: 600, margin: "0 auto"
+          }}>
+            <button className="btn-main" onClick={markComplete} style={{
+              width: "100%", background: color, border: "none",
+              color: "#fff", fontFamily: "inherit", fontWeight: 700,
+              fontSize: 14, letterSpacing: "0.04em", padding: "14px 20px",
+              borderRadius: 6, cursor: "pointer"
+            }}>
+              Mark Complete — Next: {next.tag} →
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    function PlanView({ currentIndex, setCurrentIndex, setView, setExpandedExercise }) {
+      return (
+        <div style={{ padding: "24px", maxWidth: 600, margin: "0 auto" }}>
+          <div style={{ fontWeight: 800, fontSize: 20, letterSpacing: "-0.02em", color: "#E8F0FE", marginBottom: 4 }}>
+            Full Program
+          </div>
+          <div style={{ fontSize: 10, color: "#1E3A6E", letterSpacing: "0.1em", marginBottom: 24, fontWeight: 600 }}>
+            PPL × 2 — 6 DAYS/WEEK, PROGRESSIVE OVERLOAD
+          </div>
+
+          {WORKOUTS.map((w, i) => {
+            const c = BLUE[w.tag];
+            const active = i === currentIndex;
+            return (
+              <div key={i} className="day-card"
+                onClick={() => { setCurrentIndex(i); setView("workout"); setExpandedExercise(null); }}
+                style={{
+                  border: active ? `1px solid ${c}33` : "1px solid #0C1424",
+                  borderLeft: active ? `3px solid ${c}` : "3px solid #0C1424",
+                  padding: "14px 18px", marginBottom: 8, borderRadius: 6,
+                  background: active ? "#080D19" : "#070C18"
+                }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
+                      <Badge tag={w.tag} />
+                      <span style={{ fontSize: 10, color: "#1A2E50", fontWeight: 500 }}>{w.label}</span>
+                      {active && <span style={{ fontSize: 9, color: "#2563EB", letterSpacing: "0.1em", fontWeight: 700 }}>← CURRENT</span>}
+                    </div>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: active ? "#C8D8F8" : "#243558", letterSpacing: "-0.01em" }}>
+                      {w.name}
+                    </div>
+                  </div>
+                  <span style={{ color: "#1A2E50", fontSize: 13 }}>→</span>
+                </div>
+              </div>
+            );
+          })}
+
+          <div style={{
+            marginTop: 24, padding: "18px", background: "#070C18",
+            border: "1px solid #0C1424", borderRadius: 6,
+            fontSize: 12, color: "#243558", lineHeight: 1.8, fontWeight: 400
+          }}>
+            <div style={{ color: "#1E3A6E", fontWeight: 700, letterSpacing: "0.08em", marginBottom: 8, fontSize: 11 }}>
+              PROGRAM NOTES
+            </div>
+            Rest 90–120s between compound sets, 60s between isolation work. Add weight when you hit the top of the rep range for all sets. Deload every 6–8 weeks. Push → Pull → Legs twice through — optimized for frequency and recovery.
+          </div>
+        </div>
+      );
+    }
+
+    // ─── App ─────────────────────────────────────────────────────────────────
+    function App() {
+      const [currentIndex, setCurrentIndex] = useState(null);
+      const [view, setView] = useState("home");
+      const [expandedExercise, setExpandedExercise] = useState(null);
+      const [loaded, setLoaded] = useState(false);
+      const [completedToday, setCompletedToday] = useState(false);
+
+      useEffect(() => {
+        const idx = store.get("fitlog_index");
+        setCurrentIndex(idx !== null ? parseInt(idx) : 0);
+        const done = store.get("fitlog_done_today");
+        if (done === new Date().toDateString()) setCompletedToday(true);
+        setLoaded(true);
+      }, []);
+
+      function markComplete() {
+        const next = (currentIndex + 1) % WORKOUTS.length;
+        store.set("fitlog_index", String(next));
+        store.set("fitlog_done_today", new Date().toDateString());
+        setCurrentIndex(next);
+        setCompletedToday(true);
+        setView("home");
+        setExpandedExercise(null);
+      }
+
+      function resetProgress() {
+        store.set("fitlog_index", "0");
+        store.del("fitlog_done_today");
+        setCurrentIndex(0);
+        setCompletedToday(false);
+      }
+
+      if (!loaded || currentIndex === null) {
+        return (
+          <div style={{
+            display: "flex", alignItems: "center", justifyContent: "center",
+            height: "100vh", background: "#060912", color: "#1E3A6E",
+            fontFamily: "Inter, Helvetica Neue, sans-serif", fontSize: 13, fontWeight: 500
+          }}>
+            Loading...
+          </div>
+        );
+      }
+
+      const current = WORKOUTS[currentIndex];
+      const next = WORKOUTS[(currentIndex + 1) % WORKOUTS.length];
+
+      return (
+        <div style={{ minHeight: "100vh", background: "#060912", color: "#E8F0FE", overflowX: "hidden" }}>
+          <Header view={view} setView={setView} />
+          <ProgressBar currentIndex={currentIndex} color={BLUE[current.tag]} />
+
+          {view === "home" && (
+            <HomeView
+              current={current} next={next} currentIndex={currentIndex}
+              completedToday={completedToday} setView={setView} resetProgress={resetProgress}
+            />
+          )}
+          {view === "workout" && (
+            <WorkoutView
+              current={current} next={next} setView={setView}
+              expandedExercise={expandedExercise} setExpandedExercise={setExpandedExercise}
+              markComplete={markComplete}
+            />
+          )}
+          {view === "plan" && (
+            <PlanView
+              currentIndex={currentIndex} setCurrentIndex={setCurrentIndex}
+              setView={setView} setExpandedExercise={setExpandedExercise}
+            />
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
