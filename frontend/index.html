@@ -25,6 +25,10 @@
     .btn:active { transform: translateY(0); }
     .tab-btn { cursor: pointer; background: none; border: none; font-family: inherit; transition: color 0.12s; }
     .chip { display: inline-block; font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 3px; }
+    input[type=number] { -moz-appearance: textfield; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    input[type=number]:focus { outline: none; }
+    select:focus { outline: none; }
   </style>
 </head>
 <body>
@@ -579,6 +583,194 @@ function advanceDay(cycleIdx, weekNum, dayIdx, completedDays) {
   return { cycleIdx: nextCycle, weekNum: 1, dayIdx: 0 };
 }
 
+// ─── Exercise logging & suggestions ──────────────────────────────────────────
+
+// Beginner-intermediate starting weights for 160 lbs, 5'10" (~23 BMI) lifter
+function getStartingWeight(name) {
+  const n = name.toLowerCase();
+  if (n.includes("back squat") || (n.includes("squat variation"))) return { weight: 115, tip: "~0.7× bodyweight" };
+  if (n.includes("front squat") || n.includes("hack squat")) return { weight: 95, tip: "~0.6× bodyweight" };
+  if (n.includes("bulgarian") || (n.includes("split squat") && !n.includes("goblet"))) return { weight: 25, tip: "25 lbs per dumbbell" };
+  if (n.includes("goblet")) return { weight: 35, tip: "kettlebell or dumbbell" };
+  if (n.includes("squat") && !n.includes("cossack") && !n.includes("lateral")) return { weight: 115, tip: "~0.7× bodyweight" };
+  if ((n.includes("conventional deadlift")) || (n.includes("deadlift variation") && !n.includes("romanian") && !n.includes("stiff"))) return { weight: 135, tip: "~0.85× bodyweight" };
+  if (n.includes("romanian") || n.includes("rdl") || n.includes("stiff-leg") || n.includes("stiff leg")) return { weight: 95, tip: "~0.6× bodyweight" };
+  if (n.includes("trap bar")) return { weight: 155, tip: "slightly more than conventional" };
+  if (n.includes("deadlift")) return { weight: 135, tip: "~0.85× bodyweight" };
+  if (n.includes("leg press")) return { weight: 180, tip: "~1.1× bodyweight" };
+  if (n.includes("leg extension")) return { weight: 60, tip: "machine weight" };
+  if (n.includes("leg curl") || n.includes("hamstring curl")) return { weight: 50, tip: "machine weight" };
+  if (n.includes("calf raise")) return { weight: 90, tip: "machine or barbell" };
+  if (n.includes("hip thrust")) return { weight: 95, tip: "barbell" };
+  if (n.includes("lunge")) return { weight: 20, tip: "20 lbs per dumbbell" };
+  if (n.includes("close grip bench") || n.includes("close-grip bench")) return { weight: 85, tip: "slightly less than bench" };
+  if (n.includes("incline") && (n.includes("bench") || n.includes("press"))) return { weight: 75, tip: "~0.47× bodyweight" };
+  if (n.includes("dumbbell bench") || (n.includes("db") && n.includes("bench"))) return { weight: 40, tip: "40 lbs per dumbbell" };
+  if (n.includes("bench press") || n.includes("bench variation")) return { weight: 95, tip: "~0.6× bodyweight" };
+  if (n.includes("overhead press") || n.includes("ohp") || (n.includes("press variation") && !n.includes("bench"))) return { weight: 65, tip: "~0.4× bodyweight" };
+  if (n.includes("seated db ohp") || n.includes("dumbbell ohp") || n.includes("shoulder press")) return { weight: 30, tip: "30 lbs per dumbbell" };
+  if (n.includes("arnold press")) return { weight: 25, tip: "25 lbs per dumbbell" };
+  if (n.includes("chest fly") || n.includes("cable fly") || n.includes("cable chest")) return { weight: 25, tip: "25 lbs per cable" };
+  if (n.includes("dip")) return { weight: 0, tip: "bodyweight (160 lbs)" };
+  if (n.includes("push-up") || n.includes("pushup")) return { weight: 0, tip: "bodyweight" };
+  if (n.includes("skullcrusher")) return { weight: 40, tip: "EZ bar" };
+  if (n.includes("tricep") && n.includes("pushdown")) return { weight: 40, tip: "cable stack" };
+  if (n.includes("tricep") || n.includes("triceps")) return { weight: 35, tip: "cable or dumbbell" };
+  if (n.includes("pull-up") || n.includes("pullup") || n.includes("chin-up")) return { weight: 0, tip: "bodyweight (160 lbs)" };
+  if (n.includes("lat pull") || n.includes("lat pulldown")) return { weight: 90, tip: "cable stack" };
+  if (n.includes("cable lat")) return { weight: 90, tip: "cable stack" };
+  if (n.includes("barbell row") || n.includes("pendlay")) return { weight: 95, tip: "~0.6× bodyweight" };
+  if (n.includes("chest supported row")) return { weight: 45, tip: "45 lbs per dumbbell" };
+  if (n.includes("1-arm") && n.includes("row")) return { weight: 45, tip: "45 lbs dumbbell" };
+  if (n.includes("cable row") || n.includes("seated row")) return { weight: 70, tip: "cable stack" };
+  if (n.includes("face pull")) return { weight: 30, tip: "cable stack" };
+  if (n.includes("rear delt")) return { weight: 12, tip: "12 lbs per dumbbell" };
+  if (n.includes("lateral raise")) return { weight: 15, tip: "15 lbs per dumbbell" };
+  if (n.includes("upright row")) return { weight: 45, tip: "barbell or cable" };
+  if (n.includes("incline") && n.includes("curl")) return { weight: 20, tip: "20 lbs per dumbbell" };
+  if (n.includes("preacher curl")) return { weight: 45, tip: "EZ bar" };
+  if (n.includes("cable curl")) return { weight: 40, tip: "cable stack" };
+  if (n.includes("hammer curl")) return { weight: 30, tip: "30 lbs per dumbbell" };
+  if (n.includes("curl")) return { weight: 25, tip: "25 lbs per dumbbell" };
+  if (n.includes("row")) return { weight: 70, tip: "adjust to feel" };
+  return { weight: 45, tip: "adjust based on feel" };
+}
+
+function allLogs() { return store.get("fitlog_logs") || {}; }
+
+function getLastLog(exerciseName) {
+  const entries = allLogs()[exerciseName];
+  return entries && entries.length > 0 ? entries[entries.length - 1] : null;
+}
+
+function saveLog(exerciseName, sets, cycleLabel, weekNum) {
+  const logs = allLogs();
+  if (!logs[exerciseName]) logs[exerciseName] = [];
+  logs[exerciseName].push({
+    date: new Date().toISOString().split("T")[0],
+    cycleLabel, weekNum, sets,
+  });
+  store.set("fitlog_logs", logs);
+}
+
+function getSuggested(exerciseName, lastLog) {
+  if (!lastLog || !lastLog.sets || lastLog.sets.length === 0)
+    return { ...getStartingWeight(exerciseName), isDefault: true };
+  const validSets = lastLog.sets.filter(s => parseFloat(s.weight) > 0 || parseInt(s.reps) > 0);
+  if (validSets.length === 0) return { ...getStartingWeight(exerciseName), isDefault: true };
+  const avgWeight = validSets.reduce((s, x) => s + (parseFloat(x.weight) || 0), 0) / validSets.length;
+  const avgReps   = validSets.reduce((s, x) => s + (parseInt(x.reps)   || 0), 0) / validSets.length;
+  const n = exerciseName.toLowerCase();
+  const isLower = n.includes("squat") || n.includes("deadlift") || n.includes("leg") || n.includes("hip") || n.includes("lunge");
+  const inc = isLower ? 10 : 5;
+  const suggested = avgReps >= 8 ? avgWeight + inc : avgReps >= 6 ? avgWeight : Math.max(0, avgWeight - inc);
+  return {
+    weight: Math.round(suggested / 2.5) * 2.5,
+    tip: avgReps >= 8 ? `+${inc} lbs — hit top of range` : avgReps >= 6 ? "same weight — stay here" : `-${inc} lbs — reset slightly`,
+    isDefault: false,
+  };
+}
+
+function parseSetsCount(str) {
+  if (!str) return 3;
+  const m = str.match(/^(\d+)/);
+  return m ? Math.min(parseInt(m[1]), 6) : 3;
+}
+
+function daysAgoStr(isoDate) {
+  try {
+    const diff = Math.round((Date.now() - new Date(isoDate)) / 86400000);
+    if (diff === 0) return "today";
+    if (diff === 1) return "yesterday";
+    return `${diff}d ago`;
+  } catch { return isoDate; }
+}
+
+function ExerciseLogger({ exerciseName, setsRepsStr, color, cycleLabel, weekNum }) {
+  const lastLog  = getLastLog(exerciseName);
+  const suggestion = getSuggested(exerciseName, lastLog);
+  const n = parseSetsCount(setsRepsStr);
+  const [sets, setSets] = useState(() =>
+    Array.from({ length: n }, () => ({ weight: suggestion.weight > 0 ? String(suggestion.weight) : "", reps: "" }))
+  );
+  const [saved, setSaved] = useState(false);
+
+  function update(i, field, val) { setSets(p => p.map((s, idx) => idx === i ? { ...s, [field]: val } : s)); setSaved(false); }
+
+  function handleSave() {
+    const filled = sets.filter(s => s.weight !== "" || s.reps !== "");
+    if (filled.length === 0) return;
+    saveLog(exerciseName, filled, cycleLabel, weekNum);
+    setSaved(true);
+  }
+
+  const inputStyle = (c) => ({
+    flex: 1, padding: "8px 6px", borderRadius: 5,
+    border: `1px solid ${c}44`, background: "#060F1E",
+    color: "#E8F0FE", fontSize: 14, fontWeight: 700,
+    fontFamily: "inherit", textAlign: "center",
+  });
+
+  return (
+    <div style={{ padding: "14px 20px 16px", background: color + "0A", borderBottom: `1px solid ${color}1A` }}>
+      {/* Suggestion + last time cards */}
+      <div style={{ display: "flex", gap: 10, marginBottom: 14 }}>
+        <div style={{ flex: 1, background: color + "1C", borderRadius: 6, padding: "10px 12px", border: `1px solid ${color}33` }}>
+          <div style={{ fontSize: 9, fontWeight: 700, color, letterSpacing: "0.1em", marginBottom: 4 }}>
+            {suggestion.isDefault ? "SUGGESTED START" : "SUGGESTED"}
+          </div>
+          <div style={{ fontSize: 20, fontWeight: 900, color: "#E8F0FE", letterSpacing: "-0.02em" }}>
+            {suggestion.weight > 0 ? `${suggestion.weight} lbs` : "Bodyweight"}
+          </div>
+          <div style={{ fontSize: 10, color: "#7AAAE8", marginTop: 3, lineHeight: 1.4 }}>{suggestion.tip}</div>
+        </div>
+        <div style={{ flex: 1, background: "#0A1525", borderRadius: 6, padding: "10px 12px", border: "1px solid #1A3050" }}>
+          <div style={{ fontSize: 9, fontWeight: 700, color: "#7AAAE8", letterSpacing: "0.1em", marginBottom: 4 }}>
+            {lastLog ? `LAST TIME · ${daysAgoStr(lastLog.date)}` : "LAST TIME"}
+          </div>
+          {lastLog ? (
+            <>
+              <div style={{ fontSize: 11, color: "#9DBDE8", lineHeight: 1.7 }}>
+                {lastLog.sets.map((s, i) => <span key={i}>{i > 0 ? " · " : ""}{parseFloat(s.weight) > 0 ? `${s.weight}lb` : "BW"}×{s.reps}</span>)}
+              </div>
+              <div style={{ fontSize: 10, color: "#5B8BD4", marginTop: 3 }}>{lastLog.cycleLabel} · Wk {lastLog.weekNum}</div>
+            </>
+          ) : (
+            <>
+              <div style={{ fontSize: 11, color: "#3D5A7A" }}>No history yet</div>
+              <div style={{ fontSize: 10, color: "#3D5A7A", marginTop: 3 }}>160 lbs · 5'10" profile</div>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Set inputs */}
+      <div style={{ marginBottom: 12 }}>
+        {sets.map((s, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+            <span style={{ fontSize: 10, color: "#5B8BD4", fontWeight: 700, width: 36, flexShrink: 0, letterSpacing: "0.04em" }}>
+              S{i + 1}
+            </span>
+            <input type="number" placeholder="lbs" value={s.weight} onChange={e => update(i, "weight", e.target.value)} style={inputStyle(color)} />
+            <span style={{ fontSize: 12, color: "#5B8BD4", flexShrink: 0, fontWeight: 600 }}>×</span>
+            <input type="number" placeholder="reps" value={s.reps} onChange={e => update(i, "reps", e.target.value)} style={inputStyle(color)} />
+          </div>
+        ))}
+      </div>
+
+      <button onClick={handleSave} style={{
+        background: saved ? "#16A34A22" : color,
+        color: saved ? "#22C55E" : "#fff",
+        border: saved ? "1px solid #22C55E55" : "none",
+        padding: "8px 20px", borderRadius: 5, fontSize: 11, fontWeight: 700,
+        letterSpacing: "0.06em", cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s"
+      }}>
+        {saved ? "✓ Saved" : "Save Sets"}
+      </button>
+    </div>
+  );
+}
+
 // ─── Components ──────────────────────────────────────────────────────────────
 
 function Header({ view, setView }) {
@@ -810,7 +1002,7 @@ function WorkoutView({ state, setState, setView, selectedDay }) {
   const day = cycle.days[dayKey];
   const color = DAY_COLOR[dayKey];
   const sr = setsReps(day, weekNum);
-  const [expanded, setExpanded] = useState(null);
+  const [expandedAcc, setExpandedAcc] = useState(null);
 
   function markComplete() {
     const nextDayIdx = DAY_ORDER.indexOf(dayKey) + 1;
@@ -831,25 +1023,27 @@ function WorkoutView({ state, setState, setView, selectedDay }) {
     setView("home");
   }
 
+  const SectionLabel = ({ children }) => (
+    <div style={{ padding: "14px 20px 8px", fontSize: 9, color: "#7AAAE8", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>
+      {children}
+    </div>
+  );
+
   return (
     <div style={{ maxWidth: 600, margin: "0 auto" }}>
       <div style={{ padding: "18px 20px 0" }}>
         <button className="tab-btn" onClick={() => setView("home")} style={{
-          color: "#1E3A6E", fontSize: 11, letterSpacing: "0.06em",
+          color: "#5B8BD4", fontSize: 11, letterSpacing: "0.06em",
           marginBottom: 18, display: "block", fontWeight: 600
         }}>
           ← Back
         </button>
-
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
           <CycleTag cycle={cycle} />
-          <span style={{
-            fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 2,
-            background: color + "22", color, letterSpacing: "0.1em"
-          }}>
+          <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 2, background: color + "22", color, letterSpacing: "0.1em" }}>
             {DAY_LABEL[dayKey]}
           </span>
-          <span style={{ fontSize: 10, color: "#1E3A6E", fontWeight: 600 }}>WK {weekNum}</span>
+          <span style={{ fontSize: 10, color: "#7AAAE8", fontWeight: 600 }}>WK {weekNum}</span>
         </div>
         <div style={{ fontWeight: 800, fontSize: 22, color: "#E8F0FE", letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 20 }}>
           {day.focus}
@@ -858,37 +1052,23 @@ function WorkoutView({ state, setState, setView, selectedDay }) {
 
       <div style={{ paddingBottom: 110 }}>
 
-        {/* Main Lift */}
+        {/* ── Main Lift + Logger ── */}
         {day.mainLift && (
-          <div style={{ marginBottom: 2 }}>
-            <div style={{
-              padding: "12px 20px 8px",
-              fontSize: 9, color: "#7AAAE8", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase"
-            }}>
-              Main Lift
-            </div>
-            <div style={{
-              margin: "0 20px", padding: "16px", borderRadius: 8,
-              background: color + "12", border: `1px solid ${color}28`,
-              marginBottom: 16
-            }}>
-              <div style={{ fontWeight: 700, fontSize: 16, color: "#C8D8F8", marginBottom: 4, letterSpacing: "-0.01em" }}>
+          <div>
+            <SectionLabel>Main Lift</SectionLabel>
+            <div style={{ margin: "0 20px", padding: "14px 16px 12px", borderRadius: 8, background: color + "12", border: `1px solid ${color}30` }}>
+              <div style={{ fontWeight: 700, fontSize: 16, color: "#C8D8F8", marginBottom: 2, letterSpacing: "-0.01em" }}>
                 {day.mainLift.name}
               </div>
-              <div style={{ fontWeight: 900, fontSize: 28, color, letterSpacing: "-0.02em", marginBottom: 10 }}>
+              <div style={{ fontWeight: 900, fontSize: 26, color, letterSpacing: "-0.02em", marginBottom: day.mainLift.options ? 10 : 0 }}>
                 {sr}
               </div>
               {day.mainLift.options && (
                 <div>
-                  <div style={{ fontSize: 9, color: "#1E3A6E", fontWeight: 700, letterSpacing: "0.1em", marginBottom: 6 }}>
-                    OPTIONS
-                  </div>
+                  <div style={{ fontSize: 9, color: "#7AAAE8", fontWeight: 700, letterSpacing: "0.1em", marginBottom: 6 }}>OPTIONS</div>
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                     {day.mainLift.options.map((o, i) => (
-                      <span key={i} style={{
-                        fontSize: 10, fontWeight: 500, padding: "3px 9px", borderRadius: 3,
-                        background: "#0D1A2E", color: "#7AAAE8", border: "1px solid #1A3050"
-                      }}>
+                      <span key={i} style={{ fontSize: 10, fontWeight: 500, padding: "3px 9px", borderRadius: 3, background: "#0D1A2E", color: "#7AAAE8", border: "1px solid #1A3050" }}>
                         {o}
                       </span>
                     ))}
@@ -896,52 +1076,47 @@ function WorkoutView({ state, setState, setView, selectedDay }) {
                 </div>
               )}
             </div>
+            <ExerciseLogger exerciseName={day.mainLift.name} setsRepsStr={sr} color={color} cycleLabel={cycle.label} weekNum={weekNum} />
           </div>
         )}
 
-        {/* Activation Circuit */}
+        {/* ── Activation Circuit ── */}
         {day.activation && day.activation.length > 0 && (
           <div>
-            <div style={{
-              padding: "12px 20px 8px",
-              fontSize: 9, color: "#7AAAE8", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase"
-            }}>
-              Activation Circuit
-            </div>
+            <SectionLabel>Activation Circuit</SectionLabel>
             {day.activation.map((ex, i) => (
-              <div key={i} className="tappable" style={{
-                padding: "13px 20px",
-                borderBottom: "1px solid #1A2D45",
-                background: "transparent"
-              }}>
-                <div style={{ fontWeight: 500, fontSize: 13, color: "#9DBDE8", letterSpacing: "-0.01em" }}>
-                  {ex}
-                </div>
+              <div key={i} style={{ padding: "12px 20px", borderBottom: "1px solid #1A2D45" }}>
+                <div style={{ fontSize: 13, color: "#9DBDE8", fontWeight: 500 }}>{ex}</div>
               </div>
             ))}
           </div>
         )}
 
-        {/* Accessories */}
+        {/* ── Accessories + Logger ── */}
         {day.accessories && day.accessories.length > 0 && (
           <div>
-            <div style={{
-              padding: "12px 20px 8px",
-              fontSize: 9, color: "#7AAAE8", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase"
-            }}>
-              Accessories
-            </div>
-            {day.accessories.map((ex, i) => (
-              <div key={i} className="tappable" style={{
-                padding: "13px 20px",
-                borderBottom: "1px solid #1A2D45",
-                background: "transparent"
-              }}>
-                <div style={{ fontWeight: 500, fontSize: 13, color: "#9DBDE8", letterSpacing: "-0.01em" }}>
-                  {ex}
+            <SectionLabel>Accessories</SectionLabel>
+            {day.accessories.map((ex, i) => {
+              const isOpen = expandedAcc === i;
+              const srMatch = ex.match(/(\d+\s*[×x]\s*[\d\-–]+)/);
+              const exName = ex.split(/[—–(]/)[0].trim();
+              const exSr   = srMatch ? srMatch[0] : null;
+              return (
+                <div key={i}>
+                  <div className="tappable" onClick={() => setExpandedAcc(isOpen ? null : i)}
+                    style={{ padding: "12px 20px", borderBottom: isOpen ? "none" : "1px solid #1A2D45", display: "flex", alignItems: "center", justifyContent: "space-between", background: isOpen ? color + "08" : "transparent" }}>
+                    <div>
+                      <div style={{ fontSize: 13, color: "#C8D8F8", fontWeight: 600 }}>{exName}</div>
+                      <div style={{ fontSize: 11, color: exSr ? color : "#6B9ED8", fontWeight: exSr ? 700 : 400, marginTop: 2 }}>
+                        {exSr || ex.replace(exName, "").replace(/^[\s—–]+/, "")}
+                      </div>
+                    </div>
+                    <span style={{ color: "#5B8BD4", fontSize: 11, marginLeft: 12 }}>{isOpen ? "▲" : "▼"}</span>
+                  </div>
+                  {isOpen && <ExerciseLogger exerciseName={exName} setsRepsStr={exSr} color={color} cycleLabel={cycle.label} weekNum={weekNum} />}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
