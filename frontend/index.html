@@ -956,12 +956,36 @@ function ProgramView({ state, setState, setView, setSelectedDay, profileId }) {
 }
 
 // ─── App ─────────────────────────────────────────────────────────────────────
+function getHashView() {
+  const hash = window.location.hash.replace("#/", "");
+  return ["home", "workout", "program"].includes(hash) ? hash : "home";
+}
+
 function App() {
   const defaultState = { cycleIdx: 0, weekNum: 1, dayIdx: 0 }; // Cycle 1 (most recent)
   const [activeProfile, setActiveProfileState] = useState(() => store.get("fitlog_active_profile") || "AW");
   const [state, setState] = useState(null);
-  const [view, setView] = useState("home");
+  const [view, setViewState] = useState(() => getHashView());
   const [selectedDay, setSelectedDay] = useState(null);
+
+  // Sync view state to URL hash
+  function setView(v) {
+    window.history.pushState(null, "", "#/" + v);
+    setViewState(v);
+  }
+
+  // Listen for back/forward browser navigation
+  useEffect(() => {
+    function onPopState() {
+      setViewState(getHashView());
+    }
+    window.addEventListener("popstate", onPopState);
+    // Set initial hash if not present
+    if (!window.location.hash) {
+      window.history.replaceState(null, "", "#/home");
+    }
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   // Load workout state whenever the active profile changes
   useEffect(() => {
