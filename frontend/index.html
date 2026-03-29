@@ -956,12 +956,50 @@ function ProgramView({ state, setState, setView, setSelectedDay, profileId }) {
 }
 
 // ─── App ─────────────────────────────────────────────────────────────────────
+const { useRef } = React;
+
+function parseHash() {
+  const h = window.location.hash.replace(/^#\/?/, "");
+  if (h.startsWith("workout/")) return { view: "workout", day: h.split("/")[1] || null };
+  if (h === "program") return { view: "program", day: null };
+  return { view: "home", day: null };
+}
+
 function App() {
   const defaultState = { cycleIdx: 0, weekNum: 1, dayIdx: 0 }; // Cycle 1 (most recent)
   const [activeProfile, setActiveProfileState] = useState(() => store.get("fitlog_active_profile") || "AW");
   const [state, setState] = useState(null);
-  const [view, setView] = useState("home");
-  const [selectedDay, setSelectedDay] = useState(null);
+
+  const [view, setViewState] = useState(() => parseHash().view);
+  const [selectedDay, setSelectedDayState] = useState(() => parseHash().day);
+  const selectedDayRef = useRef(parseHash().day);
+
+  // navigate() is the single source of truth for view changes
+  function navigate(v, day) {
+    // day param is optional; falls back to ref so setSelectedDay+setView calls still work
+    const d = day !== undefined ? day : selectedDayRef.current;
+    if (day !== undefined) { selectedDayRef.current = day; setSelectedDayState(day); }
+    const hash = v === "workout" && d ? `#/workout/${d}` : v === "program" ? "#/program" : "#/";
+    history.pushState(null, "", hash);
+    setViewState(v);
+  }
+
+  // Wrap setSelectedDay so it updates the ref synchronously (no nav)
+  function setSelectedDay(d) { selectedDayRef.current = d; setSelectedDayState(d); }
+  // setView reads the ref so chained setSelectedDay(d); setView("workout") works
+  function setView(v) { navigate(v); }
+
+  // Browser back / forward
+  useEffect(() => {
+    function onPopState() {
+      const { view: v, day } = parseHash();
+      selectedDayRef.current = day;
+      setSelectedDayState(day);
+      setViewState(v);
+    }
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   // Load workout state whenever the active profile changes
   useEffect(() => {
@@ -972,9 +1010,7 @@ function App() {
   function setActiveProfile(pid) {
     store.set("fitlog_active_profile", pid);
     setActiveProfileState(pid);
-    setView("home");
-    setSelectedDay(null);
-    // state will reload via the useEffect above
+    navigate("home");
     setState(null);
   }
 
