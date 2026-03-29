@@ -783,10 +783,26 @@ function Header({ view, setView }) {
       position: "sticky", top: 0, zIndex: 10,
       background: "rgba(6,9,18,0.96)", backdropFilter: "blur(8px)"
     }}>
-      <div>
-        <div style={{ fontWeight: 800, fontSize: 17, letterSpacing: "-0.02em", color: "#E8F0FE" }}>FitLog</div>
-        <div style={{ fontSize: 9, color: "#5B8BD4", letterSpacing: "0.12em", marginTop: 1, fontWeight: 600, textTransform: "uppercase" }}>
-          Amol — TeamBuildr
+      {/* Logo */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="34" height="34" rx="8" fill="url(#logoGrad)"/>
+          <text x="17" y="23" textAnchor="middle" fontFamily="Inter, Helvetica Neue, sans-serif" fontWeight="900" fontSize="14" letterSpacing="-0.5" fill="white">AW</text>
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#2563EB"/>
+              <stop offset="100%" stopColor="#4F46E5"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
+            <span style={{ fontWeight: 900, fontSize: 15, letterSpacing: "0.04em", color: "#E8F0FE", textTransform: "uppercase" }}>AMOLW</span>
+            <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: "0.08em", color: "#3B82F6", textTransform: "uppercase" }}>TRAINING</span>
+          </div>
+          <div style={{ fontSize: 9, color: "#5B8BD4", letterSpacing: "0.14em", marginTop: 1, fontWeight: 600, textTransform: "uppercase" }}>
+            TeamBuildr Program
+          </div>
         </div>
       </div>
       <div style={{ display: "flex", gap: 2 }}>
